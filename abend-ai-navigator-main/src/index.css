@@ -1,0 +1,154 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Sans+Pro:wght@400;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Elevance Health Brand Design System
+   Colors based on official Elevance Health branding
+   All colors MUST be HSL.
+*/
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 213 31% 14%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 213 31% 14%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 213 31% 14%;
+
+    /* Elevance Health Official Brand Colors */
+    --primary: 213 87% 23%;  /* Elevance Health Navy Blue - #003976 */
+    --primary-foreground: 0 0% 100%;
+    --primary-light: 213 67% 35%;  /* Lighter shade for hover states */
+    --primary-lighter: 213 47% 55%;  /* Even lighter for accents */
+
+    --secondary: 210 20% 96%;  /* Light blue-grey for backgrounds */
+    --secondary-foreground: 213 31% 14%;
+
+    --muted: 210 20% 96%;
+    --muted-foreground: 215 16% 47%;
+
+    --accent: 213 67% 35%;  /* Elevance brand blue accent */
+    --accent-foreground: 0 0% 100%;
+
+    /* Status Colors optimized for Elevance theme */
+    --success: 144 61% 40%;  /* Professional green */
+    --success-foreground: 0 0% 100%;
+    --warning: 38 92% 45%;   /* Amber/orange for warnings */
+    --warning-foreground: 0 0% 100%;
+    --error: 0 72% 51%;      /* Clear red for errors */
+    --error-foreground: 0 0% 100%;
+    --info: 213 67% 45%;     /* Elevance blue for info */
+    --info-foreground: 0 0% 100%;
+
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 214 32% 91%;
+    --input: 214 32% 91%;
+    --ring: 213 87% 23%;
+
+    --radius: 0.5rem;
+
+    --sidebar-background: 213 87% 23%;
+
+    --sidebar-foreground: 0 0% 100%;
+
+    --sidebar-primary: 213 67% 35%;
+
+    --sidebar-primary-foreground: 0 0% 100%;
+
+    --sidebar-accent: 213 47% 55%;
+
+    --sidebar-accent-foreground: 0 0% 100%;
+
+    --sidebar-border: 213 67% 30%;
+
+    --sidebar-ring: 213 87% 23%;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 212.7 26.8% 83.9%;
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Inter', 'Source Sans Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+    font-optical-sizing: auto;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Source Sans Pro', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-weight: 600;
+    letter-spacing: -0.025em;
+  }
+
+  .font-display {
+    font-family: 'Source Sans Pro', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-weight: 700;
+    letter-spacing: -0.025em;
+  }
+
+  .font-body {
+    font-family: 'Inter', 'Source Sans Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-weight: 400;
+  }
+
+  /* Elevance Health brand typography improvements */
+  .text-elevance-navy {
+    color: hsl(var(--primary));
+  }
+
+  .bg-elevance-navy {
+    background-color: hsl(var(--primary));
+  }
+
+  .border-elevance-navy {
+    border-color: hsl(var(--primary));
+  }
+}

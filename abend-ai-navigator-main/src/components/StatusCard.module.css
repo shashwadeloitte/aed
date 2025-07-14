@@ -1,0 +1,65 @@
+/* Status card backgrounds */
+.cardCritical {
+  @apply relative overflow-hidden border-2 bg-error/10 border-error/20;
+}
+
+.cardWarning {
+  @apply relative overflow-hidden border-2 bg-warning/10 border-warning/20;
+}
+
+.cardSuccess {
+  @apply relative overflow-hidden border-2 bg-success/10 border-success/20;
+}
+
+.cardInfo {
+  @apply relative overflow-hidden border-2 bg-info/10 border-info/20;
+}
+
+/* Status text colors */
+.textCritical {
+  @apply text-error;
+}
+
+.textWarning {
+  @apply text-orange-600;
+}
+
+.textSuccess {
+  @apply text-success;
+}
+
+.textInfo {
+  @apply text-info;
+}
+
+/* Icon colors */
+.iconCritical {
+  @apply h-5 w-5 text-error;
+}
+
+.iconWarning {
+  @apply h-5 w-5 text-warning-foreground;
+}
+
+.iconSuccess {
+  @apply h-5 w-5 text-success;
+}
+
+.iconInfo {
+  @apply h-5 w-5 text-info;
+}
+
+/* Trend colors */
+.trendPositive {
+  @apply text-error;
+}
+
+.trendNegative {
+  @apply text-white !important;
+  background-color: #16a34a !important;
+  border-color: #16a34a !important;
+}
+
+.trendNeutral {
+  @apply text-muted-foreground;
+} 

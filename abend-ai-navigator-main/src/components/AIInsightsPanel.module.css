@@ -1,0 +1,102 @@
+/* Badge status styles */
+.badgeGood {
+  @apply bg-green-100 text-green-700;
+}
+
+.badgeWarning {
+  @apply bg-amber-100 text-amber-700;
+}
+
+.badgeCritical {
+  @apply bg-red-100 text-red-700;
+}
+
+/* Progress bar color variants */
+.progressGreen {
+  @apply h-2;
+}
+.progressGreen > div {
+  @apply bg-green-500;
+}
+
+.progressAmber {
+  @apply h-2;
+}
+.progressAmber > div {
+  @apply bg-amber-500;
+}
+
+.progressRed {
+  @apply h-2;
+}
+.progressRed > div {
+  @apply bg-red-500;
+}
+
+/* Confidence level containers */
+.confidenceHigh {
+  @apply p-4 rounded-lg border bg-green-50 border-green-200;
+}
+
+.confidenceMedium {
+  @apply p-4 rounded-lg border bg-amber-50 border-amber-200;
+}
+
+.confidenceLow {
+  @apply p-4 rounded-lg border bg-orange-50 border-orange-200;
+}
+
+.confidenceNone {
+  @apply p-4 rounded-lg border bg-red-50 border-red-200;
+}
+
+/* Text color variants */
+.textGreen {
+  @apply text-green-800;
+}
+
+.textAmber {
+  @apply text-amber-800;
+}
+
+.textOrange {
+  @apply text-orange-800;
+}
+
+.textRed {
+  @apply text-red-800;
+}
+
+/* Icon colors */
+.iconGreen {
+  @apply h-4 w-4 text-green-800;
+}
+
+.iconAmber {
+  @apply h-4 w-4 text-amber-800;
+}
+
+.iconOrange {
+  @apply h-4 w-4 text-orange-800;
+}
+
+.iconRed {
+  @apply h-4 w-4 text-red-800;
+}
+
+/* Badge background colors */
+.badgeBgGreen {
+  @apply bg-green-50 text-green-800 border-none;
+}
+
+.badgeBgAmber {
+  @apply bg-amber-50 text-amber-800 border-none;
+}
+
+.badgeBgOrange {
+  @apply bg-orange-50 text-orange-800 border-none;
+}
+
+.badgeBgRed {
+  @apply bg-red-50 text-red-800 border-none;
+} 
