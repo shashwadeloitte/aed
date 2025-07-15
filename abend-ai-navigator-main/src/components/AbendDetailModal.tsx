@@ -24,7 +24,7 @@ interface AbendDetailModalProps {
   defaultTab?: string;
 }
 
-export default function AbendDetailModal({ abend, open, onClose, defaultTab = "overview" }: AbendDetailModalProps) {
+export default function AbendDetailModal({ abend, open, onClose, defaultTab = STATIC_TEXTS.TAB_OVERVIEW }: AbendDetailModalProps) {
   const [comments, setComments] = useState("");
   const [activeTab, setActiveTab] = useState(defaultTab);
   const [approvePending, setApprovePending] = useState(false);
@@ -71,8 +71,8 @@ export default function AbendDetailModal({ abend, open, onClose, defaultTab = "o
     jobId: `JOB-${abend.id.split('-')[2]}`,
     orderId: `ORD-${abend.id.split('-')[2]}`,
     severity: abend.priority.toUpperCase(),
-    currentState: abend.status === "resolved" ? "RESOLVED" : 
-                 abend.status === "PENDING_MANUAL_APPROVAL" ? "AI_ANALYSIS" : "DETECTED",
+    currentState: abend.status === STATIC_TEXTS.STATUS_RESOLVED ? STATIC_TEXTS.STATUS_RESOLVED_CAPS : 
+                 abend.status === STATIC_TEXTS.STATUS_PENDING_MANUAL_APPROVAL ? STATIC_TEXTS.STATUS_AI_ANALYSIS : STATIC_TEXTS.STATUS_DETECTED,
     durationInState: parseInt(abend.duration.split('h')[0]) * 60 + 
                      (abend.duration.includes('m') ? parseInt(abend.duration.split('m')[0].split(' ').pop() || '0') : 0),
     rootCause: getRootCause(abend.abendType),
@@ -103,15 +103,15 @@ export default function AbendDetailModal({ abend, open, onClose, defaultTab = "o
   }
 
   const workflowSteps = [
-    { name: 'Detected', state: 'DETECTED', icon: AlertCircle, completed: true },
-    { name: 'AI Analysis', state: 'AI_ANALYSIS', icon: Brain, completed: detailedAbend.currentState !== 'DETECTED' },
-    { name: 'Remediation', state: 'REMEDIATION', icon: Wrench, completed: detailedAbend.currentState === 'RESOLVED' },
-    { name: 'Resolved', state: 'RESOLVED', icon: CheckCircle, completed: detailedAbend.currentState === 'RESOLVED' },
+    { name: STATIC_TEXTS.WORKFLOW_DETECTED, state: STATIC_TEXTS.WORKFLOW_STATE_DETECTED, icon: AlertCircle, completed: true },
+    { name: STATIC_TEXTS.WORKFLOW_AI_ANALYSIS, state: STATIC_TEXTS.WORKFLOW_STATE_AI_ANALYSIS, icon: Brain, completed: detailedAbend.currentState !== STATIC_TEXTS.WORKFLOW_STATE_DETECTED },
+    { name: STATIC_TEXTS.WORKFLOW_REMEDIATION, state: STATIC_TEXTS.WORKFLOW_STATE_REMEDIATION, icon: Wrench, completed: detailedAbend.currentState === STATIC_TEXTS.WORKFLOW_STATE_RESOLVED },
+    { name: STATIC_TEXTS.WORKFLOW_RESOLVED, state: STATIC_TEXTS.WORKFLOW_STATE_RESOLVED, icon: CheckCircle, completed: detailedAbend.currentState === STATIC_TEXTS.WORKFLOW_STATE_RESOLVED },
   ];
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-6xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className={`${STATIC_TEXTS.DIALOG_MAX_WIDTH} ${STATIC_TEXTS.DIALOG_MAX_HEIGHT} ${STATIC_TEXTS.DIALOG_OVERFLOW}`}>
         <DialogHeader className="pb-4">
           <div>
             <DialogTitle className="text-2xl font-bold text-gray-900">
@@ -124,16 +124,16 @@ export default function AbendDetailModal({ abend, open, onClose, defaultTab = "o
           </div>
         </DialogHeader>
 
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-5">
-            <TabsTrigger value="overview">Overview</TabsTrigger>
-            <TabsTrigger value="ai-diagnostics">AI Diagnostics</TabsTrigger>
-            <TabsTrigger value="remediation">Remediation</TabsTrigger>
-            <TabsTrigger value="system-logs">Audit Logs</TabsTrigger>
-            <TabsTrigger value="job-logs">Job Logs</TabsTrigger>
+        <Tabs value={activeTab} onValueChange={setActiveTab} className={STATIC_TEXTS.W_FULL}>
+          <TabsList className={`grid ${STATIC_TEXTS.W_FULL} ${STATIC_TEXTS.GRID_COLS_5}`}>
+            <TabsTrigger value={STATIC_TEXTS.TAB_OVERVIEW}>{STATIC_TEXTS.TAB_OVERVIEW_LABEL}</TabsTrigger>
+            <TabsTrigger value={STATIC_TEXTS.TAB_AI_DIAGNOSTICS}>{STATIC_TEXTS.TAB_AI_DIAGNOSTICS_LABEL}</TabsTrigger>
+            <TabsTrigger value={STATIC_TEXTS.TAB_REMEDIATION}>{STATIC_TEXTS.TAB_REMEDIATION_LABEL}</TabsTrigger>
+            <TabsTrigger value={STATIC_TEXTS.TAB_SYSTEM_LOGS}>{STATIC_TEXTS.TAB_SYSTEM_LOGS_LABEL}</TabsTrigger>
+            <TabsTrigger value={STATIC_TEXTS.TAB_JOB_LOGS}>{STATIC_TEXTS.TAB_JOB_LOGS_LABEL}</TabsTrigger>
           </TabsList>
 
-          <TabsContent value="overview" className="mt-6">
+          <TabsContent value={STATIC_TEXTS.TAB_OVERVIEW} className={STATIC_TEXTS.MT_6}>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <Card>
                 <CardHeader>
@@ -230,7 +230,7 @@ export default function AbendDetailModal({ abend, open, onClose, defaultTab = "o
             </div>
           </TabsContent>
 
-          <TabsContent value="ai-diagnostics" className="mt-6">
+          <TabsContent value={STATIC_TEXTS.TAB_AI_DIAGNOSTICS} className={STATIC_TEXTS.MT_6}>
             <div className="space-y-6">
               <Card>
                 <CardHeader>
@@ -299,10 +299,10 @@ export default function AbendDetailModal({ abend, open, onClose, defaultTab = "o
             </div>
           </TabsContent>
 
-          <TabsContent value="remediation" className="mt-6">
+          <TabsContent value={STATIC_TEXTS.TAB_REMEDIATION} className={STATIC_TEXTS.MT_6}>
             <div className="space-y-6">
-              <Accordion type="single" collapsible className="w-full">
-                <AccordionItem value="ai-actions">
+                              <Accordion type="single" collapsible className={STATIC_TEXTS.W_FULL}>
+                  <AccordionItem value={STATIC_TEXTS.ACCORDION_AI_ACTIONS}>
                   <AccordionTrigger className="text-left hover:bg-blue-50 transition-colors data-[state=open]:bg-blue-50 [&[data-state=open]>div>svg]:text-blue-600 hover:[&>div>svg]:text-blue-600">
                     <div className="flex items-center">
                       <Wrench className="h-5 w-5 mr-2 text-orange-500 transition-colors" />
@@ -432,7 +432,7 @@ export default function AbendDetailModal({ abend, open, onClose, defaultTab = "o
                         className="flex-1 bg-green-600 hover:bg-green-700"
                       >
                         <ThumbsUp className="h-4 w-4 mr-2" />
-                        {approvePending ? 'Approving...' : 'Approve Recommendation'}
+                        {approvePending ? STATIC_TEXTS.APPROVING : STATIC_TEXTS.APPROVE_RECOMMENDATION}
                       </Button>
                       <Button 
                         variant="outline" 
@@ -441,7 +441,7 @@ export default function AbendDetailModal({ abend, open, onClose, defaultTab = "o
                         className="flex-1"
                       >
                         <ThumbsDown className="h-4 w-4 mr-2" />
-                        {rejectPending ? 'Rejecting...' : 'Reject Suggestion'}
+                        {rejectPending ? STATIC_TEXTS.REJECTING : STATIC_TEXTS.REJECT_SUGGESTION}
                       </Button>
                     </div>
                   </div>
@@ -450,7 +450,7 @@ export default function AbendDetailModal({ abend, open, onClose, defaultTab = "o
             </div>
           </TabsContent>
 
-          <TabsContent value="system-logs" className="mt-6">
+          <TabsContent value={STATIC_TEXTS.TAB_SYSTEM_LOGS} className={STATIC_TEXTS.MT_6}>
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center justify-between">
@@ -460,7 +460,7 @@ export default function AbendDetailModal({ abend, open, onClose, defaultTab = "o
                   </div>
                   <Button variant="outline" size="sm">
                     <Download className="h-4 w-4 mr-2" />
-                    Download
+                    {STATIC_TEXTS.DOWNLOAD}
                   </Button>
                 </CardTitle>
               </CardHeader>
@@ -556,7 +556,7 @@ export default function AbendDetailModal({ abend, open, onClose, defaultTab = "o
                     </div>
                   </div>
                   
-                  {abend.status === "PENDING_MANUAL_APPROVAL" && (
+                  {abend.status === STATIC_TEXTS.STATUS_PENDING_MANUAL_APPROVAL && (
                     <div className="flex items-start space-x-3 p-3 bg-yellow-50 rounded-lg">
                       <div className="w-2 h-2 bg-yellow-600 rounded-full mt-2"></div>
                       <div className="flex-1">
@@ -571,7 +571,7 @@ export default function AbendDetailModal({ abend, open, onClose, defaultTab = "o
                     </div>
                   )}
                   
-                  {abend.status === "resolved" && (
+                  {abend.status === STATIC_TEXTS.STATUS_RESOLVED && (
                     <div className="flex items-start space-x-3 p-3 bg-green-50 rounded-lg">
                       <div className="w-2 h-2 bg-green-600 rounded-full mt-2"></div>
                       <div className="flex-1">
@@ -593,7 +593,7 @@ export default function AbendDetailModal({ abend, open, onClose, defaultTab = "o
             </Card>
           </TabsContent>
 
-          <TabsContent value="job-logs" className="mt-6">
+          <TabsContent value={STATIC_TEXTS.TAB_JOB_LOGS} className={STATIC_TEXTS.MT_6}>
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center justify-between">
@@ -603,7 +603,7 @@ export default function AbendDetailModal({ abend, open, onClose, defaultTab = "o
                   </div>
                   <Button variant="outline" size="sm">
                     <Download className="h-4 w-4 mr-2" />
-                    Export
+                    {STATIC_TEXTS.EXPORT}
                   </Button>
                 </CardTitle>
               </CardHeader>

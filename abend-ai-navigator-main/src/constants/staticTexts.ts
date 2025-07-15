@@ -130,6 +130,12 @@ export const STATIC_TEXTS = {
   WORKFLOW_REMEDIATION: "Remediation",
   WORKFLOW_RESOLVED: "Resolved",
   
+  // Workflow Step States
+  WORKFLOW_STATE_DETECTED: "DETECTED",
+  WORKFLOW_STATE_AI_ANALYSIS: "AI_ANALYSIS",
+  WORKFLOW_STATE_REMEDIATION: "REMEDIATION",
+  WORKFLOW_STATE_RESOLVED: "RESOLVED",
+  
   // AI Confidence Analysis
   AI_CONFIDENCE_ANALYSIS: "AI Confidence Analysis",
   CONFIDENCE_SCORE: "Confidence Score",
@@ -382,6 +388,227 @@ export const STATIC_TEXTS = {
   // Application Constants
   MOBILE_BREAKPOINT: 768,
   PAGINATION_DEFAULT_SIZE: 5,
+  
+  // Tab Values
+  TAB_OVERVIEW: "overview",
+  TAB_AI_DIAGNOSTICS: "ai-diagnostics",
+  TAB_REMEDIATION: "remediation",
+  TAB_SYSTEM_LOGS: "system-logs",
+  TAB_JOB_LOGS: "job-logs",
+  TAB_ABENDS: "abends",
+  TAB_ANALYTICS: "analytics",
+  TAB_INSIGHTS: "insights",
+  TAB_PREDICTIONS: "predictions",
+  TAB_PATTERNS: "patterns",
+  TAB_RECOMMENDATIONS: "recommendations",
+  
+  // Tab Labels
+  TAB_OVERVIEW_LABEL: "Overview",
+  TAB_AI_DIAGNOSTICS_LABEL: "AI Diagnostics",
+  TAB_REMEDIATION_LABEL: "Remediation",
+  TAB_SYSTEM_LOGS_LABEL: "Audit Logs",
+  TAB_JOB_LOGS_LABEL: "Job Logs",
+  TAB_ABENDS_LABEL: "Abends",
+  TAB_ANALYTICS_LABEL: "Analytics",
+  
+  // Table Headers
+  TABLE_JOB_NAME: "Job Name",
+  TABLE_JOB_ID: "Job ID",
+  TABLE_TYPE: "Type",
+  TABLE_STATUS: "Status",
+  TABLE_TIMESTAMP: "Timestamp",
+  TABLE_AI_CONFIDENCE: "AI Confidence",
+  TABLE_ASSIGNED_TO: "Assigned To",
+  TABLE_PRIORITY: "Priority",
+  TABLE_ACTIONS: "Actions",
+  
+  // Status Values
+  STATUS_RESOLVED: "resolved",
+  STATUS_PENDING_MANUAL_APPROVAL: "PENDING_MANUAL_APPROVAL",
+  STATUS_DETECTED: "DETECTED",
+  STATUS_RESOLVED_CAPS: "RESOLVED",
+  STATUS_AI_ANALYSIS: "AI_ANALYSIS",
+  STATUS_OPERATIONAL: "operational",
+  STATUS_ABEND_DETECTED: "ABEND_DETECTED",
+  STATUS_REMEDIATION_SUGGESTIONS_GENERATED: "REMEDIATION_SUGGESTIONS_GENERATED",
+  STATUS_MANUAL_ANALYSIS_REQUIRED: "MANUAL_ANALYSIS_REQUIRED",
+  
+  // Filter Values
+  FILTER_ALL: "all",
+  FILTER_ACTIVE: "active",
+  FILTER_ALL_STATUSES: "All Statuses",
+  FILTER_ALL_PRIORITIES: "All Priorities",
+  
+  // System Values
+  AI_SYSTEM: "AI System",
+  NOW: "now",
+  SEC_AGO: "sec ago",
+  
+  // Button Labels
+  VIEW_DETAILS: "View Details",
+  CLEAR_FILTERS: "Clear Filters",
+  TOGGLE_SIDEBAR: "Toggle Sidebar",
+  
+  // Aria Labels
+  ARIA_TOGGLE_SIDEBAR: "Toggle Sidebar",
+  ARIA_BREADCRUMB: "breadcrumb",
+  
+  // Placeholders
+  PLACEHOLDER_PRIORITY: "Priority",
+  PLACEHOLDER_STATUS: "Status",
+  
+  // Dialog Content
+  DIALOG_MAX_WIDTH: "max-w-6xl",
+  DIALOG_MAX_HEIGHT: "max-h-[90vh]",
+  DIALOG_OVERFLOW: "overflow-y-auto",
+  
+  // CSS Classes
+  CLASS_FONT_MONO: "font-mono",
+  CLASS_TEXT_SM: "text-sm",
+  CLASS_FONT_MEDIUM: "font-medium",
+  CLASS_FONT_BOLD: "font-bold",
+  CLASS_TEXT_MUTED_FOREGROUND: "text-muted-foreground",
+  
+  // Accordion Values
+  ACCORDION_AI_ACTIONS: "ai-actions",
+  
+  // Component Display Names
+  CARD_DISPLAY_NAME: "Card",
+  CARD_HEADER_DISPLAY_NAME: "CardHeader",
+  CARD_TITLE_DISPLAY_NAME: "CardTitle",
+  CARD_DESCRIPTION_DISPLAY_NAME: "CardDescription",
+  CARD_CONTENT_DISPLAY_NAME: "CardContent",
+  CARD_FOOTER_DISPLAY_NAME: "CardFooter",
+  
+  // Default Tab
+  DEFAULT_TAB: "overview",
+  
+  // Button Variants
+  VARIANT_OUTLINE: "outline",
+  VARIANT_GHOST: "ghost",
+  VARIANT_SECONDARY: "secondary",
+  VARIANT_DESTRUCTIVE: "destructive",
+  VARIANT_DEFAULT: "default",
+  
+  // Badge Variants
+  BADGE_OUTLINE: "outline",
+  BADGE_SECONDARY: "secondary",
+  BADGE_DESTRUCTIVE: "destructive",
+  BADGE_DEFAULT: "default",
+  
+  // Button Sizes
+  SIZE_SM: "sm",
+  SIZE_DEFAULT: "default",
+  
+  // Date Formats
+  DATE_LOCALE_STRING: "toLocaleString",
+  
+  // Object Keys
+  KEY_JOB_NAME: "jobName",
+  KEY_JOB_ID: "jobId",
+  KEY_ABEND_TYPE: "abendType",
+  KEY_STATUS: "status",
+  KEY_TIMESTAMP: "timestamp",
+  KEY_CONFIDENCE: "confidence",
+  KEY_ASSIGNED_TO: "assignedTo",
+  KEY_PRIORITY: "priority",
+  
+  // Filter Functions
+  FILTER_INCLUDES_STRING: "includesString",
+  
+  // Calendar/Popover
+  POPOVER_ALIGN_START: "start",
+  CALENDAR_MODE_RANGE: "range",
+  
+  // HTML Elements
+  ELEMENT_BUTTON: "button",
+  ELEMENT_NAV: "nav",
+  ELEMENT_OL: "ol",
+  ELEMENT_LI: "li",
+  ELEMENT_SPAN: "span",
+  
+  // ARIA Roles
+  ROLE_LINK: "link",
+  ROLE_PRESENTATION: "presentation",
+  ROLE_ALERT: "alert",
+  
+  // ARIA States
+  ARIA_DISABLED_TRUE: "true",
+  ARIA_CURRENT_PAGE: "page",
+  ARIA_HIDDEN_TRUE: "true",
+  
+  // CSS Values
+  COLOR_GREEN: "green",
+  COLOR_AMBER: "amber",
+  COLOR_RED: "red",
+  
+  // Grid Columns
+  GRID_COLS_5: "grid-cols-5",
+  
+  // Spacing
+  SPACE_Y_6: "space-y-6",
+  SPACE_Y_4: "space-y-4",
+  SPACE_Y_3: "space-y-3",
+  
+  // Flex
+  FLEX_ITEMS_CENTER: "flex items-center",
+  FLEX_JUSTIFY_BETWEEN: "flex justify-between",
+  
+  // Background Colors
+  BG_GRAY_50: "bg-gray-50",
+  BG_BLUE_50: "bg-blue-50",
+  BG_GREEN_50: "bg-green-50",
+  BG_YELLOW_50: "bg-yellow-50",
+  BG_RED_50: "bg-red-50",
+  BG_AMBER_50: "bg-amber-50",
+  
+  // Text Colors
+  TEXT_GRAY_500: "text-gray-500",
+  TEXT_GRAY_600: "text-gray-600",
+  TEXT_GRAY_700: "text-gray-700",
+  TEXT_GRAY_800: "text-gray-800",
+  TEXT_GRAY_900: "text-gray-900",
+  TEXT_BLUE_600: "text-blue-600",
+  TEXT_BLUE_800: "text-blue-800",
+  TEXT_BLUE_900: "text-blue-900",
+  TEXT_GREEN_600: "text-green-600",
+  TEXT_GREEN_800: "text-green-800",
+  TEXT_YELLOW_600: "text-yellow-600",
+  TEXT_YELLOW_800: "text-yellow-800",
+  TEXT_RED_600: "text-red-600",
+  TEXT_RED_800: "text-red-800",
+  TEXT_AMBER_600: "text-amber-600",
+  
+  // Border Colors
+  BORDER_ROUNDED_LG: "border rounded-lg",
+  ROUNDED_LG: "rounded-lg",
+  
+  // Padding
+  P_3: "p-3",
+  P_4: "p-4",
+  
+  // Margin
+  MT_1: "mt-1",
+  MT_2: "mt-2",
+  MT_6: "mt-6",
+  
+  // Width
+  W_FULL: "w-full",
+  W_AUTO: "w-auto",
+  
+  // Height
+  H_4: "h-4",
+  H_5: "h-5",
+  H_8: "h-8",
+  
+  // Position
+  RELATIVE: "relative",
+  
+  // Display
+  HIDDEN: "hidden",
+  
+  // Transitions
+  TRANSITION_COLORS: "transition-colors",
 };
 
 // Export individual text groups for easier imports

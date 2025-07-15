@@ -41,8 +41,8 @@ import {
 
 const Index = () => {
   const [currentTime, setCurrentTime] = useState(new Date());
-  const [systemStatus, setSystemStatus] = useState("operational");
-  const [activeTab, setActiveTab] = useState("overview");
+  const [systemStatus, setSystemStatus] = useState(STATIC_TEXTS.STATUS_OPERATIONAL);
+  const [activeTab, setActiveTab] = useState(STATIC_TEXTS.TAB_OVERVIEW);
   const [appliedFilter, setAppliedFilter] = useState<string | null>(null);
   const [filterTimestamp, setFilterTimestamp] = useState<number>(0);
   const [selectedAbend, setSelectedAbend] = useState<Abend | null>(null);
@@ -53,18 +53,18 @@ const Index = () => {
   const getAbendCounts = () => {
     const counts = {
       active: MOCK_ABENDS.filter(abend => 
-        abend.status === "ABEND_DETECTED" || 
-        abend.status === "REMEDIATION_SUGGESTIONS_GENERATED" || 
-        abend.status === "MANUAL_ANALYSIS_REQUIRED"
+        abend.status === STATIC_TEXTS.STATUS_ABEND_DETECTED || 
+        abend.status === STATIC_TEXTS.STATUS_REMEDIATION_SUGGESTIONS_GENERATED || 
+        abend.status === STATIC_TEXTS.STATUS_MANUAL_ANALYSIS_REQUIRED
       ).length,
-      resolved: MOCK_ABENDS.filter(abend => abend.status === "resolved").length,
-      pendingApproval: MOCK_ABENDS.filter(abend => abend.status === "PENDING_MANUAL_APPROVAL").length,
+      resolved: MOCK_ABENDS.filter(abend => abend.status === STATIC_TEXTS.STATUS_RESOLVED).length,
+      pendingApproval: MOCK_ABENDS.filter(abend => abend.status === STATIC_TEXTS.STATUS_PENDING_MANUAL_APPROVAL).length,
       total: MOCK_ABENDS.length,
       automationRate: 0
     };
     
     // Calculate automation rate (percentage of abends handled by AI System)
-    const automatedCount = MOCK_ABENDS.filter(abend => abend.assignedTo === "AI System").length;
+    const automatedCount = MOCK_ABENDS.filter(abend => abend.assignedTo === STATIC_TEXTS.AI_SYSTEM).length;
     counts.automationRate = Math.round((automatedCount / counts.total) * 100);
     
     return counts;
@@ -94,7 +94,7 @@ const Index = () => {
 
     if (diffInSeconds < 60) {
       return `Last updated ${
-        diffInSeconds === 0 ? "now" : `${diffInSeconds} sec ago`
+        diffInSeconds === 0 ? STATIC_TEXTS.NOW : `${diffInSeconds} ${STATIC_TEXTS.SEC_AGO}`
       }`;
     } else if (diffInSeconds < 3600) {
       const minutes = Math.floor(diffInSeconds / 60);
@@ -118,7 +118,7 @@ const Index = () => {
   };
 
   const handleCardClick = (filterType: string) => {
-    setActiveTab("abends");
+    setActiveTab(STATIC_TEXTS.TAB_ABENDS);
     setAppliedFilter(filterType);
     setFilterTimestamp(Date.now()); // Force update filter timestamp
 
@@ -226,7 +226,7 @@ const Index = () => {
             status="critical"
             description={STATIC_TEXTS.TOTAL_ABENDS_IN_SYSTEM}
             icon={<AlertTriangle className="h-5 w-5" />}
-            onClick={() => handleCardClick("all")}
+            onClick={() => handleCardClick(STATIC_TEXTS.FILTER_ALL)}
           />
           <StatusCard
             title={STATIC_TEXTS.PENDING_APPROVAL}
@@ -235,7 +235,7 @@ const Index = () => {
             status="warning"
             description={STATIC_TEXTS.AWAITING_MANUAL_APPROVAL}
             icon={<Clock className="h-5 w-5" />}
-            onClick={() => handleCardClick("PENDING_MANUAL_APPROVAL")}
+            onClick={() => handleCardClick(STATIC_TEXTS.STATUS_PENDING_MANUAL_APPROVAL)}
           />
           <StatusCard
             title={STATIC_TEXTS.RESOLVED}
@@ -244,7 +244,7 @@ const Index = () => {
             status="success"
             description={STATIC_TEXTS.SUCCESSFULLY_REMEDIATED}
             icon={<CheckCircle className="h-5 w-5" />}
-            onClick={() => handleCardClick("resolved")}
+            onClick={() => handleCardClick(STATIC_TEXTS.STATUS_RESOLVED)}
           />
           <StatusCard
             title={STATIC_TEXTS.AUTOMATION_RATE}
@@ -253,7 +253,7 @@ const Index = () => {
             status="info"
             description={STATIC_TEXTS.PERCENTAGE_AUTOMATED}
             icon={<Zap className="h-5 w-5" />}
-            onClick={() => handleCardClick("all")}
+            onClick={() => handleCardClick(STATIC_TEXTS.FILTER_ALL)}
           />
         </div>
 
@@ -264,11 +264,11 @@ const Index = () => {
           className="space-y-6"
         >
           <TabsList className="grid w-full grid-cols-4">
-            <TabsTrigger value="overview" className="flex items-center gap-2">
+            <TabsTrigger value={STATIC_TEXTS.TAB_OVERVIEW} className="flex items-center gap-2">
               <Activity className="h-4 w-4" />
               {STATIC_TEXTS.OVERVIEW}
             </TabsTrigger>
-            <TabsTrigger value="abends" className="flex items-center gap-2">
+            <TabsTrigger value={STATIC_TEXTS.TAB_ABENDS} className="flex items-center gap-2">
               <Database className="h-4 w-4" />
               {STATIC_TEXTS.ABENDS}
             </TabsTrigger>
@@ -279,13 +279,13 @@ const Index = () => {
               <Brain className="h-4 w-4" />
               {STATIC_TEXTS.AI_INSIGHTS}
             </TabsTrigger>
-            <TabsTrigger value="analytics" className="flex items-center gap-2">
+            <TabsTrigger value={STATIC_TEXTS.TAB_ANALYTICS} className="flex items-center gap-2">
               <BarChart3 className="h-4 w-4" />
               {STATIC_TEXTS.ANALYTICS}
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="overview" className="space-y-6">
+          <TabsContent value={STATIC_TEXTS.TAB_OVERVIEW} className="space-y-6">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               {/* Recent Activity */}
               <Card>
@@ -524,7 +524,7 @@ const Index = () => {
             </div>
           </TabsContent>
 
-          <TabsContent value="abends">
+          <TabsContent value={STATIC_TEXTS.TAB_ABENDS}>
             <AbendTable appliedFilter={appliedFilter} filterTimestamp={filterTimestamp} />
           </TabsContent>
 
@@ -532,7 +532,7 @@ const Index = () => {
             <AIInsightsPanel />
           </TabsContent>
 
-          <TabsContent value="analytics" className="space-y-6">
+          <TabsContent value={STATIC_TEXTS.TAB_ANALYTICS} className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <Card>
                 <CardHeader>
@@ -587,7 +587,7 @@ const Index = () => {
         open={modalOpen}
         onClose={handleCloseModal}
         abend={selectedAbend}
-        defaultTab="overview"
+        defaultTab={STATIC_TEXTS.TAB_OVERVIEW}
       />
     </div>
   );

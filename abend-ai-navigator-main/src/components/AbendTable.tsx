@@ -45,6 +45,7 @@ import {
   PRIORITY_CONFIG,
   APP_CONFIG
 } from "@/constants";
+import { STATIC_TEXTS } from "@/constants/staticTexts";
 
 interface AbendTableProps {
   appliedFilter?: string | null;
@@ -73,14 +74,14 @@ export function AbendTable({ appliedFilter, filterTimestamp }: AbendTableProps =
     if (appliedFilter !== undefined && appliedFilter !== null) {
       setColumnFilters(prev => {
         // Remove any existing status filter
-        const otherFilters = prev.filter(f => f.id !== "status");
+        const otherFilters = prev.filter(f => f.id !== STATIC_TEXTS.KEY_STATUS);
         
-        if (appliedFilter === "all") {
+        if (appliedFilter === STATIC_TEXTS.FILTER_ALL) {
           // For "all", just remove the status filter, keep other filters
           return otherFilters;
         } else {
           // Add the new status filter while keeping other filters
-          return [...otherFilters, { id: "status", value: appliedFilter }];
+          return [...otherFilters, { id: STATIC_TEXTS.KEY_STATUS, value: appliedFilter }];
         }
       });
     }
@@ -90,17 +91,17 @@ export function AbendTable({ appliedFilter, filterTimestamp }: AbendTableProps =
   const uniqueStatuses = Array.from(new Set(MOCK_ABENDS.map(abend => abend.status)));
   const uniquePriorities = Array.from(new Set(MOCK_ABENDS.map(abend => abend.priority)));
 
-  const [modalDefaultTab, setModalDefaultTab] = useState("overview");
+  const [modalDefaultTab, setModalDefaultTab] = useState(STATIC_TEXTS.TAB_OVERVIEW);
 
   const handleViewDetails = (abend: Abend) => {
     setSelectedAbend(abend);
-    setModalDefaultTab("overview");
+    setModalDefaultTab(STATIC_TEXTS.TAB_OVERVIEW);
     setModalOpen(true);
   };
 
   const handleViewRemediation = (abend: Abend) => {
     setSelectedAbend(abend);
-    setModalDefaultTab("remediation");
+    setModalDefaultTab(STATIC_TEXTS.TAB_REMEDIATION);
     setModalOpen(true);
   };
 
@@ -116,8 +117,8 @@ export function AbendTable({ appliedFilter, filterTimestamp }: AbendTableProps =
   // Define columns for react-table
   const columns: ColumnDef<Abend>[] = [
     {
-      accessorKey: "jobName",
-      header: "Job Name",
+      accessorKey: STATIC_TEXTS.KEY_JOB_NAME,
+      header: STATIC_TEXTS.TABLE_JOB_NAME,
       cell: ({ row }) => (
         <div className="font-medium hover:bg-blue-50 hover:text-blue-700 transition-colors duration-200 rounded px-2 py-1 cursor-pointer">
           {row.getValue("jobName")}
@@ -125,15 +126,15 @@ export function AbendTable({ appliedFilter, filterTimestamp }: AbendTableProps =
       ),
     },
     {
-      accessorKey: "jobId",
-      header: "Job ID",
+      accessorKey: STATIC_TEXTS.KEY_JOB_ID,
+      header: STATIC_TEXTS.TABLE_JOB_ID,
       cell: ({ row }) => (
         <div className="font-mono text-sm">{row.getValue("jobId")}</div>
       ),
     },
     {
-      accessorKey: "abendType",
-      header: "Type",
+      accessorKey: STATIC_TEXTS.KEY_ABEND_TYPE,
+      header: STATIC_TEXTS.TABLE_TYPE,
       cell: ({ row }) => (
         <Badge variant="outline" className="font-mono">
           {row.getValue("abendType")}
@@ -141,8 +142,8 @@ export function AbendTable({ appliedFilter, filterTimestamp }: AbendTableProps =
       ),
     },
     {
-      accessorKey: "status",
-      header: "Status",
+      accessorKey: STATIC_TEXTS.KEY_STATUS,
+      header: STATIC_TEXTS.TABLE_STATUS,
       cell: ({ row }) => {
         const status = row.getValue("status") as keyof typeof ABEND_STATUS_CONFIG;
         return (
@@ -152,27 +153,27 @@ export function AbendTable({ appliedFilter, filterTimestamp }: AbendTableProps =
         );
       },
       filterFn: (row, id, value) => {
-        if (value === "all") return true;
-        if (value === "active") {
+        if (value === STATIC_TEXTS.FILTER_ALL) return true;
+        if (value === STATIC_TEXTS.FILTER_ACTIVE) {
           // "active" filter maps to multiple state machine statuses
           const status = row.getValue(id) as string;
-          return status === "ABEND_DETECTED" || 
-                 status === "REMEDIATION_SUGGESTIONS_GENERATED" || 
-                 status === "MANUAL_ANALYSIS_REQUIRED";
+          return status === STATIC_TEXTS.STATUS_ABEND_DETECTED || 
+                 status === STATIC_TEXTS.STATUS_REMEDIATION_SUGGESTIONS_GENERATED || 
+                 status === STATIC_TEXTS.STATUS_MANUAL_ANALYSIS_REQUIRED;
         }
         return row.getValue(id) === value;
       },
     },
     {
-      accessorKey: "timestamp",
-      header: "Timestamp",
+      accessorKey: STATIC_TEXTS.KEY_TIMESTAMP,
+      header: STATIC_TEXTS.TABLE_TIMESTAMP,
       cell: ({ row }) => (
         <div className="text-muted-foreground">{new Date(row.getValue("timestamp")).toLocaleString()}</div>
       ),
     },
     {
-      accessorKey: "confidence",
-      header: "AI Confidence",
+      accessorKey: STATIC_TEXTS.KEY_CONFIDENCE,
+      header: STATIC_TEXTS.TABLE_AI_CONFIDENCE,
       cell: ({ row }) => {
         const confidence = row.getValue("confidence") as number;
         return (
@@ -195,25 +196,25 @@ export function AbendTable({ appliedFilter, filterTimestamp }: AbendTableProps =
       },
     },
     {
-      accessorKey: "assignedTo",
-      header: "Assigned To",
+      accessorKey: STATIC_TEXTS.KEY_ASSIGNED_TO,
+      header: STATIC_TEXTS.TABLE_ASSIGNED_TO,
     },
     {
-      accessorKey: "priority",
-      header: "Priority",
+      accessorKey: STATIC_TEXTS.KEY_PRIORITY,
+      header: STATIC_TEXTS.TABLE_PRIORITY,
       cell: ({ row }) => (
         <span className="font-medium">{row.getValue("priority")}</span>
       ),
       filterFn: (row, id, value) => {
-        return value === "all" || row.getValue(id) === value;
+        return value === STATIC_TEXTS.FILTER_ALL || row.getValue(id) === value;
       },
     },
     {
       id: "actions",
-      header: "Actions",
+      header: STATIC_TEXTS.TABLE_ACTIONS,
       cell: ({ row }) => {
         const abend = row.original;
-        if (abend.status !== "PENDING_MANUAL_APPROVAL") {
+        if (abend.status !== STATIC_TEXTS.STATUS_PENDING_MANUAL_APPROVAL) {
           return null; // Don't show button for non-pending statuses
         }
         
@@ -226,7 +227,7 @@ export function AbendTable({ appliedFilter, filterTimestamp }: AbendTableProps =
               handleViewRemediation(abend);
             }}
           >
-            View Details
+            {STATIC_TEXTS.VIEW_DETAILS}
           </Button>
         );
       },
@@ -256,13 +257,13 @@ export function AbendTable({ appliedFilter, filterTimestamp }: AbendTableProps =
   // Helper functions for filter management
   const getColumnFilterValue = (columnId: string): string => {
     const filter = columnFilters.find(f => f.id === columnId);
-    return (filter?.value as string) || "all";
+    return (filter?.value as string) || STATIC_TEXTS.FILTER_ALL;
   };
 
   const setColumnFilterValue = (columnId: string, value: string) => {
     setColumnFilters(prev => {
       const otherFilters = prev.filter(f => f.id !== columnId);
-      if (value === "all") {
+      if (value === STATIC_TEXTS.FILTER_ALL) {
         return otherFilters;
       }
       return [...otherFilters, { id: columnId, value }];
@@ -336,7 +337,7 @@ export function AbendTable({ appliedFilter, filterTimestamp }: AbendTableProps =
                 <SelectValue placeholder="Filter by status" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All Statuses</SelectItem>
+                <SelectItem value={STATIC_TEXTS.FILTER_ALL}>{STATIC_TEXTS.FILTER_ALL_STATUSES}</SelectItem>
                   {uniqueStatuses.map((status) => (
                     <SelectItem key={status} value={status}>
                       {ABEND_STATUS_CONFIG[status].label}
@@ -350,10 +351,10 @@ export function AbendTable({ appliedFilter, filterTimestamp }: AbendTableProps =
                 onValueChange={(value) => setColumnFilterValue("priority", value)}
               >
                 <SelectTrigger className="w-44">
-                  <SelectValue placeholder="Priority" />
+                  <SelectValue placeholder={STATIC_TEXTS.PLACEHOLDER_PRIORITY} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">All Priorities</SelectItem>
+                  <SelectItem value={STATIC_TEXTS.FILTER_ALL}>{STATIC_TEXTS.FILTER_ALL_PRIORITIES}</SelectItem>
                   {uniquePriorities.map((priority) => (
                     <SelectItem key={priority} value={priority}>
                       {PRIORITY_CONFIG[priority].label}
