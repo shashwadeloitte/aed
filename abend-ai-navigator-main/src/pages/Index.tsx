@@ -21,6 +21,7 @@ import {
   MOCK_ABENDS,
   type Abend,
 } from "@/constants";
+import { STATIC_TEXTS } from "@/constants/staticTexts";
 import {
   AlertTriangle,
   CheckCircle,
@@ -110,8 +111,8 @@ const Index = () => {
   const handleRefresh = () => {
     setLastRefreshTime(new Date());
     toast({
-      title: "Dashboard Refreshed",
-      description: "All data has been updated with the latest information.",
+      title: STATIC_TEXTS.DASHBOARD_REFRESHED_TITLE,
+      description: STATIC_TEXTS.DASHBOARD_REFRESHED_DESCRIPTION,
       variant: "info",
     });
   };
@@ -122,20 +123,20 @@ const Index = () => {
     setFilterTimestamp(Date.now()); // Force update filter timestamp
 
     const filterLabels = {
-      active: "Active Abends",
-      "ABEND_DETECTED": "Abend Detected",
-      "REMEDIATION_SUGGESTIONS_GENERATED": "Suggestions Generated",
-      "PENDING_MANUAL_APPROVAL": "Pending Manual Approval",
-      "MANUAL_ANALYSIS_REQUIRED": "Manual Analysis Required",
-      resolved: "Resolved Abends",
-      all: "All Abends",
+      active: STATIC_TEXTS.ACTIVE_ABENDS,
+      "ABEND_DETECTED": STATIC_TEXTS.ABEND_DETECTED_LABEL,
+      "REMEDIATION_SUGGESTIONS_GENERATED": STATIC_TEXTS.SUGGESTIONS_GENERATED,
+      "PENDING_MANUAL_APPROVAL": STATIC_TEXTS.PENDING_MANUAL_APPROVAL_LABEL,
+      "MANUAL_ANALYSIS_REQUIRED": STATIC_TEXTS.MANUAL_ANALYSIS_REQUIRED,
+      resolved: STATIC_TEXTS.RESOLVED_ABENDS,
+      all: STATIC_TEXTS.ALL_ABENDS,
     };
 
     toast({
-      title: "Filter Applied",
-      description: `Switched to Abends tab with ${
+      title: STATIC_TEXTS.FILTER_APPLIED_TITLE,
+      description: `${STATIC_TEXTS.SWITCHED_TO_ABENDS_TAB} ${
         filterLabels[filterType as keyof typeof filterLabels]
-      } filter.`,
+      } ${STATIC_TEXTS.FILTER}`,
       variant: "info",
     });
   };
@@ -167,10 +168,10 @@ const Index = () => {
                 </div>
                 <div>
                   <h1 className="text-2xl font-display font-bold tracking-tight">
-                    ADR Portal
+                    {STATIC_TEXTS.APP_TITLE}
                   </h1>
                   <p className="text-primary-foreground/80 text-sm font-body">
-                    AI-Assisted Batch Diagnosis & Remediation
+                    {STATIC_TEXTS.APP_SUBTITLE}
                   </p>
                 </div>
               </div>
@@ -189,7 +190,7 @@ const Index = () => {
                 <div className="flex gap-2">
                   <Button variant="secondary" size="sm" onClick={handleRefresh}>
                     <RefreshCw className="h-4 w-4 mr-2" />
-                    Refresh
+                    {STATIC_TEXTS.REFRESH}
                   </Button>
                 </div>
 
@@ -208,10 +209,9 @@ const Index = () => {
           <CheckCircle className="h-4 w-4 text-success" />
           <AlertDescription>
             <span className="font-medium text-success">
-              System Status: Operational
+              {STATIC_TEXTS.SYSTEM_STATUS_OPERATIONAL}
             </span>
-            {" - "}All mainframe connections active. AI services running
-            normally. Last health check: {currentTime.toLocaleTimeString()}
+            {" - "}{STATIC_TEXTS.SYSTEM_STATUS_DESCRIPTION} {currentTime.toLocaleTimeString()}
           </AlertDescription>
         </Alert>
       </div>
@@ -220,38 +220,38 @@ const Index = () => {
         {/* Key Metrics Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <StatusCard
-            title="Active Abends"
+            title={STATIC_TEXTS.ACTIVE_ABENDS}
             count={abendCounts.total}
             trend={-15}
             status="critical"
-            description="Total abends in system"
+            description={STATIC_TEXTS.TOTAL_ABENDS_IN_SYSTEM}
             icon={<AlertTriangle className="h-5 w-5" />}
             onClick={() => handleCardClick("all")}
           />
           <StatusCard
-            title="Pending Approval"
+            title={STATIC_TEXTS.PENDING_APPROVAL}
             count={abendCounts.pendingApproval}
             trend={+8}
             status="warning"
-            description="Awaiting manual approval"
+            description={STATIC_TEXTS.AWAITING_MANUAL_APPROVAL}
             icon={<Clock className="h-5 w-5" />}
             onClick={() => handleCardClick("PENDING_MANUAL_APPROVAL")}
           />
           <StatusCard
-            title="Resolved"
+            title={STATIC_TEXTS.RESOLVED}
             count={abendCounts.resolved}
             trend={+12}
             status="success"
-            description="Successfully remediated"
+            description={STATIC_TEXTS.SUCCESSFULLY_REMEDIATED}
             icon={<CheckCircle className="h-5 w-5" />}
             onClick={() => handleCardClick("resolved")}
           />
           <StatusCard
-            title="Automation Rate"
+            title={STATIC_TEXTS.AUTOMATION_RATE}
             count={abendCounts.automationRate}
             trend={+3}
             status="info"
-            description="Percentage automated"
+            description={STATIC_TEXTS.PERCENTAGE_AUTOMATED}
             icon={<Zap className="h-5 w-5" />}
             onClick={() => handleCardClick("all")}
           />
@@ -266,22 +266,22 @@ const Index = () => {
           <TabsList className="grid w-full grid-cols-4">
             <TabsTrigger value="overview" className="flex items-center gap-2">
               <Activity className="h-4 w-4" />
-              Overview
+              {STATIC_TEXTS.OVERVIEW}
             </TabsTrigger>
             <TabsTrigger value="abends" className="flex items-center gap-2">
               <Database className="h-4 w-4" />
-              Abends
+              {STATIC_TEXTS.ABENDS}
             </TabsTrigger>
             <TabsTrigger
               value="ai-insights"
               className="flex items-center gap-2"
             >
               <Brain className="h-4 w-4" />
-              AI Insights
+              {STATIC_TEXTS.AI_INSIGHTS}
             </TabsTrigger>
             <TabsTrigger value="analytics" className="flex items-center gap-2">
               <BarChart3 className="h-4 w-4" />
-              Analytics
+              {STATIC_TEXTS.ANALYTICS}
             </TabsTrigger>
           </TabsList>
 
@@ -292,7 +292,7 @@ const Index = () => {
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <Activity className="h-5 w-5 text-blue-600" />
-                    Recent Activity
+                    {STATIC_TEXTS.RECENT_ACTIVITY}
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
@@ -315,11 +315,11 @@ const Index = () => {
 
                       const getStatusLabel = (status: string) => {
                         switch (status) {
-                          case 'resolved': return 'Resolved';
-                          case 'ABEND_DETECTED': return 'Detected';
-                          case 'REMEDIATION_SUGGESTIONS_GENERATED': return 'Suggestions Generated';
-                          case 'PENDING_MANUAL_APPROVAL': return 'Pending Approval';
-                          case 'MANUAL_ANALYSIS_REQUIRED': return 'Manual Analysis';
+                          case 'resolved': return STATIC_TEXTS.RESOLVED_LABEL;
+                          case 'ABEND_DETECTED': return STATIC_TEXTS.DETECTED;
+                          case 'REMEDIATION_SUGGESTIONS_GENERATED': return STATIC_TEXTS.SUGGESTIONS_GENERATED;
+                          case 'PENDING_MANUAL_APPROVAL': return STATIC_TEXTS.PENDING_APPROVAL_STATUS;
+                          case 'MANUAL_ANALYSIS_REQUIRED': return STATIC_TEXTS.MANUAL_ANALYSIS;
                           default: return status;
                         }
                       };
@@ -336,10 +336,10 @@ const Index = () => {
                               {abend.jobName} {getStatusLabel(abend.status)}
                             </div>
                             <div className="text-xs text-muted-foreground">
-                              {abend.jobName} - {abend.abendType} abend detected
+                              {abend.jobName} - {abend.abendType} {STATIC_TEXTS.ABEND_DETECTED}
                             </div>
                             <div className="text-xs text-muted-foreground">
-                              {abend.duration} ago
+                              {abend.duration} {STATIC_TEXTS.AGO}
                             </div>
                           </div>
                         </div>
@@ -359,10 +359,10 @@ const Index = () => {
                       </div>
                       <div>
                         <CardTitle className="text-lg font-semibold text-gray-900">
-                          Performance Metrics
+                          {STATIC_TEXTS.PERFORMANCE_METRICS}
                         </CardTitle>
                         <p className="text-sm text-gray-500">
-                          Real-time operational performance
+                          {STATIC_TEXTS.REAL_TIME_OPERATIONAL_PERFORMANCE}
                         </p>
                       </div>
                     </div>
@@ -393,10 +393,10 @@ const Index = () => {
                             }`}
                           >
                             {metric.status === "good"
-                              ? "On Target"
+                              ? STATIC_TEXTS.ON_TARGET
                               : metric.status === "warning"
-                              ? "At Risk"
-                              : "Critical"}
+                              ? STATIC_TEXTS.AT_RISK
+                              : STATIC_TEXTS.CRITICAL}
                           </Badge>
                         </div>
 
@@ -406,7 +406,7 @@ const Index = () => {
                               {metric.value}
                             </span>
                             <span className="text-xs text-gray-500">
-                              Target: {metric.target}
+                              {STATIC_TEXTS.TARGET} {metric.target}
                             </span>
                           </div>
 
@@ -439,10 +439,10 @@ const Index = () => {
                       <div className="w-2 h-2 bg-blue-500 rounded-full mt-2"></div>
                       <div>
                         <p className="text-sm font-medium text-blue-900">
-                          Performance Insight
+                          {STATIC_TEXTS.PERFORMANCE_INSIGHT}
                         </p>
                         <p className="text-sm text-blue-700 mt-1">
-                          System performance is within acceptable ranges.
+                          {STATIC_TEXTS.PERFORMANCE_INSIGHT_DESCRIPTION}
                         </p>
                       </div>
                     </div>
@@ -459,10 +459,10 @@ const Index = () => {
                     </div>
                     <div>
                       <CardTitle className="text-lg font-semibold text-gray-900">
-                        AI Confidence
+                        {STATIC_TEXTS.AI_CONFIDENCE}
                       </CardTitle>
                       <p className="text-sm text-gray-500">
-                        Analysis reliability scores
+                        {STATIC_TEXTS.ANALYSIS_RELIABILITY_SCORES}
                       </p>
                     </div>
                   </div>
@@ -511,11 +511,10 @@ const Index = () => {
                       <TrendingUp className="h-5 w-5 text-blue-600 mt-0.5" />
                       <div>
                         <h4 className="text-sm font-medium text-blue-900">
-                          AI Performance Summary
+                          {STATIC_TEXTS.AI_PERFORMANCE_SUMMARY}
                         </h4>
                         <p className="text-sm text-blue-700 mt-1">
-                          <span className="font-medium">90%</span> of abends
-                          processed with high confidence.
+                          {STATIC_TEXTS.AI_PERFORMANCE_SUMMARY_DESC}
                         </p>
                       </div>
                     </div>
@@ -537,19 +536,19 @@ const Index = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <Card>
                 <CardHeader>
-                  <CardTitle>Performance Trends</CardTitle>
+                  <CardTitle>{STATIC_TEXTS.PERFORMANCE_TRENDS}</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="text-center py-8 text-muted-foreground">
                     <BarChart3 className="h-12 w-12 mx-auto mb-4" />
-                    Advanced analytics dashboard will be implemented here
+                    {STATIC_TEXTS.ADVANCED_ANALYTICS_DASHBOARD}
                   </div>
                 </CardContent>
               </Card>
 
               <Card>
                 <CardHeader>
-                  <CardTitle>Cost Savings</CardTitle>
+                  <CardTitle>{STATIC_TEXTS.COST_SAVINGS}</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
@@ -558,20 +557,20 @@ const Index = () => {
                         $247K
                       </div>
                       <div className="text-sm text-muted-foreground">
-                        Saved this month through automation
+                        {STATIC_TEXTS.SAVED_THIS_MONTH}
                       </div>
                     </div>
                     <div className="grid grid-cols-2 gap-4">
                       <div className="text-center">
                         <div className="text-xl font-bold">156</div>
                         <div className="text-xs text-muted-foreground">
-                          Hours saved
+                          {STATIC_TEXTS.HOURS_SAVED}
                         </div>
                       </div>
                       <div className="text-center">
                         <div className="text-xl font-bold">87%</div>
                         <div className="text-xs text-muted-foreground">
-                          Automation rate
+                          {STATIC_TEXTS.AUTOMATION_RATE_PERCENT}
                         </div>
                       </div>
                     </div>

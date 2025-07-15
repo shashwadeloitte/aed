@@ -14,6 +14,7 @@ import {
   Target
 } from "lucide-react";
 import { motion } from "framer-motion";
+import { STATIC_TEXTS } from "@/constants/staticTexts";
 
 export function AIInsightsPanel() {
   return (
@@ -23,24 +24,24 @@ export function AIInsightsPanel() {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Brain className="h-5 w-5 text-primary" />
-            AI System Performance
+            {STATIC_TEXTS.AI_SYSTEM_PERFORMANCE}
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="text-center">
               <div className="text-2xl font-bold text-primary">94%</div>
-              <div className="text-sm text-muted-foreground">Automation Success Rate</div>
+              <div className="text-sm text-muted-foreground">{STATIC_TEXTS.AUTOMATION_SUCCESS_RATE}</div>
               <Progress value={94} className="mt-2" />
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-success">87%</div>
-              <div className="text-sm text-muted-foreground">Prediction Accuracy</div>
+              <div className="text-sm text-muted-foreground">{STATIC_TEXTS.PREDICTION_ACCURACY}</div>
               <Progress value={87} className="mt-2" />
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-info">2.3x</div>
-              <div className="text-sm text-muted-foreground">Faster Resolution</div>
+              <div className="text-sm text-muted-foreground">{STATIC_TEXTS.FASTER_RESOLUTION}</div>
             </div>
           </div>
         </CardContent>
@@ -49,18 +50,17 @@ export function AIInsightsPanel() {
       {/* Real-time Insights */}
       <Tabs defaultValue="insights" className="w-full">
         <TabsList className="grid w-full grid-cols-4">
-          <TabsTrigger value="insights">AI Insights</TabsTrigger>
-          <TabsTrigger value="predictions">Predictions</TabsTrigger>
-          <TabsTrigger value="patterns">Patterns</TabsTrigger>
-          <TabsTrigger value="recommendations">Recommendations</TabsTrigger>
+          <TabsTrigger value="insights">{STATIC_TEXTS.AI_INSIGHTS_TAB}</TabsTrigger>
+          <TabsTrigger value="predictions">{STATIC_TEXTS.PREDICTIONS_TAB}</TabsTrigger>
+          <TabsTrigger value="patterns">{STATIC_TEXTS.PATTERNS_TAB}</TabsTrigger>
+          <TabsTrigger value="recommendations">{STATIC_TEXTS.RECOMMENDATIONS_TAB}</TabsTrigger>
         </TabsList>
 
         <TabsContent value="insights" className="space-y-4">
           <Alert>
             <AlertTriangle className="h-4 w-4" />
             <AlertDescription>
-              <strong>High Priority Alert:</strong> Unusual spike in S0C4 abends detected in CLAIMS_BATCH jobs.
-              Pattern suggests memory corruption in dataset processing module.
+              <strong>{STATIC_TEXTS.HIGH_PRIORITY_ALERT}</strong> {STATIC_TEXTS.UNUSUAL_SPIKE_ALERT}
             </AlertDescription>
           </Alert>
 
@@ -69,20 +69,20 @@ export function AIInsightsPanel() {
               <CardHeader className="pb-3">
                 <CardTitle className="text-base flex items-center gap-2">
                   <TrendingUp className="h-4 w-4 text-success" />
-                  Trending Issues
+                  {STATIC_TEXTS.TRENDING_ISSUES}
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
                 <div className="flex justify-between items-center">
-                  <span className="text-sm">S0C4 Memory Violations</span>
+                  <span className="text-sm">{STATIC_TEXTS.SOC4_MEMORY_VIOLATIONS}</span>
                   <Badge variant="destructive">+23%</Badge>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-sm">Dataset Size Overflow</span>
+                  <span className="text-sm">{STATIC_TEXTS.DATASET_SIZE_OVERFLOW}</span>
                   <Badge variant="secondary">+15%</Badge>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-sm">JCL Parameter Issues</span>
+                  <span className="text-sm">{STATIC_TEXTS.JCL_PARAMETER_ISSUES}</span>
                   <Badge variant="outline">+8%</Badge>
                 </div>
               </CardContent>
@@ -92,21 +92,21 @@ export function AIInsightsPanel() {
               <CardHeader className="pb-3">
                 <CardTitle className="text-base flex items-center gap-2">
                   <CheckCircle className="h-4 w-4 text-success" />
-                  Resolution Success
+                  {STATIC_TEXTS.RESOLUTION_SUCCESS}
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
                 <div className="flex justify-between items-center">
-                  <span className="text-sm">Automated Fixes</span>
-                  <span className="text-sm font-medium text-success">156 today</span>
+                  <span className="text-sm">{STATIC_TEXTS.AUTOMATED_FIXES}</span>
+                  <span className="text-sm font-medium text-success">{STATIC_TEXTS.AUTOMATED_FIXES_COUNT}</span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-sm">Avg Resolution Time</span>
-                  <span className="text-sm font-medium">12.3 minutes</span>
+                  <span className="text-sm">{STATIC_TEXTS.AVG_RESOLUTION_TIME}</span>
+                  <span className="text-sm font-medium">{STATIC_TEXTS.AVG_RESOLUTION_TIME_VALUE}</span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-sm">Manual Interventions</span>
-                  <span className="text-sm font-medium text-warning-foreground">23 today</span>
+                  <span className="text-sm">{STATIC_TEXTS.MANUAL_INTERVENTIONS}</span>
+                  <span className="text-sm font-medium text-warning-foreground">{STATIC_TEXTS.MANUAL_INTERVENTIONS_COUNT}</span>
                 </div>
               </CardContent>
             </Card>
@@ -118,31 +118,31 @@ export function AIInsightsPanel() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Target className="h-5 w-5 text-primary" />
-                Predictive Analytics
+                {STATIC_TEXTS.PREDICTIVE_ANALYTICS}
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-3">
                 <div className="flex items-center justify-between p-3 border rounded-lg">
                   <div>
-                    <div className="font-medium">BILLING_RECONCILE Job</div>
-                    <div className="text-sm text-muted-foreground">Likely to fail within 2 hours</div>
+                    <div className="font-medium">{STATIC_TEXTS.BILLING_RECONCILE_JOB}</div>
+                    <div className="text-sm text-muted-foreground">{STATIC_TEXTS.BILLING_RECONCILE_PREDICTION}</div>
                   </div>
-                  <Badge variant="destructive">85% Risk</Badge>
+                  <Badge variant="destructive">{STATIC_TEXTS.RISK_85_PERCENT}</Badge>
                 </div>
                 <div className="flex items-center justify-between p-3 border rounded-lg">
                   <div>
-                    <div className="font-medium">MEMBER_SYNC_NIGHTLY</div>
-                    <div className="text-sm text-muted-foreground">Increased runtime expected</div>
+                    <div className="font-medium">{STATIC_TEXTS.MEMBER_SYNC_NIGHTLY}</div>
+                    <div className="text-sm text-muted-foreground">{STATIC_TEXTS.MEMBER_SYNC_PREDICTION}</div>
                   </div>
-                  <Badge variant="secondary">62% Risk</Badge>
+                  <Badge variant="secondary">{STATIC_TEXTS.RISK_62_PERCENT}</Badge>
                 </div>
                 <div className="flex items-center justify-between p-3 border rounded-lg">
                   <div>
-                    <div className="font-medium">CLAIMS_EXPORT_WEEKLY</div>
-                    <div className="text-sm text-muted-foreground">Resource contention likely</div>
+                    <div className="font-medium">{STATIC_TEXTS.CLAIMS_EXPORT_WEEKLY}</div>
+                    <div className="text-sm text-muted-foreground">{STATIC_TEXTS.CLAIMS_EXPORT_PREDICTION}</div>
                   </div>
-                  <Badge variant="outline">34% Risk</Badge>
+                  <Badge variant="outline">{STATIC_TEXTS.RISK_34_PERCENT}</Badge>
                 </div>
               </div>
             </CardContent>
@@ -154,39 +154,39 @@ export function AIInsightsPanel() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Zap className="h-5 w-5 text-primary" />
-                Pattern Recognition
+                {STATIC_TEXTS.PATTERN_RECOGNITION}
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-3">
                 <div className="p-3 border rounded-lg bg-error/5">
-                  <div className="font-medium text-error mb-1">Memory Leak Pattern Detected</div>
+                  <div className="font-medium text-error mb-1">{STATIC_TEXTS.MEMORY_LEAK_PATTERN}</div>
                   <div className="text-sm text-muted-foreground mb-2">
-                    Jobs starting with "CLAIMS_" showing progressive memory usage increase
+                    {STATIC_TEXTS.MEMORY_LEAK_DESCRIPTION}
                   </div>
                   <div className="flex gap-2">
-                    <Badge variant="outline" className="text-xs">12 occurrences</Badge>
-                    <Badge variant="outline" className="text-xs">Last 24h</Badge>
+                    <Badge variant="outline" className="text-xs">{STATIC_TEXTS.OCCURRENCES_12}</Badge>
+                    <Badge variant="outline" className="text-xs">{STATIC_TEXTS.LAST_24H}</Badge>
                   </div>
                 </div>
                 
                 <div className="p-3 border rounded-lg bg-warning/5">
-                  <div className="font-medium text-warning-foreground mb-1">Timing Correlation</div>
+                  <div className="font-medium text-warning-foreground mb-1">{STATIC_TEXTS.TIMING_CORRELATION}</div>
                   <div className="text-sm text-muted-foreground mb-2">
-                    Abends peak during 8-10 AM window correlating with peak data volume
+                    {STATIC_TEXTS.TIMING_CORRELATION_DESCRIPTION}
                   </div>
                   <div className="flex gap-2">
-                    <Badge variant="outline" className="text-xs">Statistical significance: 89%</Badge>
+                    <Badge variant="outline" className="text-xs">{STATIC_TEXTS.STATISTICAL_SIGNIFICANCE}</Badge>
                   </div>
                 </div>
 
                 <div className="p-3 border rounded-lg bg-info/5">
-                  <div className="font-medium text-info mb-1">Dependency Chain Impact</div>
+                  <div className="font-medium text-info mb-1">{STATIC_TEXTS.DEPENDENCY_CHAIN_IMPACT}</div>
                   <div className="text-sm text-muted-foreground mb-2">
-                    Upstream job failures causing cascading effects in 3+ downstream processes
+                    {STATIC_TEXTS.DEPENDENCY_CHAIN_DESCRIPTION}
                   </div>
                   <div className="flex gap-2">
-                    <Badge variant="outline" className="text-xs">Impact score: High</Badge>
+                    <Badge variant="outline" className="text-xs">{STATIC_TEXTS.IMPACT_SCORE_HIGH}</Badge>
                   </div>
                 </div>
               </div>
@@ -199,7 +199,7 @@ export function AIInsightsPanel() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Clock className="h-5 w-5 text-primary" />
-                AI Recommendations
+                {STATIC_TEXTS.AI_RECOMMENDATIONS}
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -211,40 +211,40 @@ export function AIInsightsPanel() {
                 <div className="p-4 border rounded-lg bg-success/5">
                   <div className="flex items-start justify-between mb-2">
                     <div>
-                      <div className="font-medium text-success mb-1">Immediate Action Required</div>
+                      <div className="font-medium text-success mb-1">{STATIC_TEXTS.IMMEDIATE_ACTION_REQUIRED}</div>
                       <div className="text-sm text-muted-foreground">
-                        Increase memory allocation for CLAIMS_BATCH_DAILY from 512MB to 1GB
+                        {STATIC_TEXTS.INCREASE_MEMORY_ALLOCATION}
                       </div>
                     </div>
-                    <Badge variant="default">96% Confidence</Badge>
+                    <Badge variant="default">{STATIC_TEXTS.CONFIDENCE_96_PERCENT}</Badge>
                   </div>
-                  <Button size="sm" className="mt-2">Apply Recommendation</Button>
+                  <Button size="sm" className="mt-2">{STATIC_TEXTS.APPLY_RECOMMENDATION}</Button>
                 </div>
 
                 <div className="p-4 border rounded-lg">
                   <div className="flex items-start justify-between mb-2">
                     <div>
-                      <div className="font-medium mb-1">Optimization Opportunity</div>
+                      <div className="font-medium mb-1">{STATIC_TEXTS.OPTIMIZATION_OPPORTUNITY}</div>
                       <div className="text-sm text-muted-foreground">
-                        Schedule MEMBER_UPDATE_JOB during off-peak hours (2-4 AM)
+                        {STATIC_TEXTS.SCHEDULE_OFF_PEAK}
                       </div>
                     </div>
-                    <Badge variant="outline">78% Confidence</Badge>
+                    <Badge variant="outline">{STATIC_TEXTS.CONFIDENCE_78_PERCENT}</Badge>
                   </div>
-                  <Button variant="outline" size="sm" className="mt-2">Schedule Change</Button>
+                  <Button variant="outline" size="sm" className="mt-2">{STATIC_TEXTS.SCHEDULE_CHANGE}</Button>
                 </div>
 
                 <div className="p-4 border rounded-lg">
                   <div className="flex items-start justify-between mb-2">
                     <div>
-                      <div className="font-medium mb-1">Preventive Measure</div>
+                      <div className="font-medium mb-1">{STATIC_TEXTS.PREVENTIVE_MEASURE}</div>
                       <div className="text-sm text-muted-foreground">
-                        Add checkpoint restart capability to long-running BILLING_RECONCILE job
+                        {STATIC_TEXTS.ADD_CHECKPOINT_RESTART}
                       </div>
                     </div>
-                    <Badge variant="secondary">65% Confidence</Badge>
+                    <Badge variant="secondary">{STATIC_TEXTS.CONFIDENCE_65_PERCENT}</Badge>
                   </div>
-                  <Button variant="outline" size="sm" className="mt-2">Plan Implementation</Button>
+                  <Button variant="outline" size="sm" className="mt-2">{STATIC_TEXTS.PLAN_IMPLEMENTATION}</Button>
                 </div>
               </motion.div>
             </CardContent>

@@ -15,6 +15,7 @@ import {
   ABEND_STATUS_CONFIG,
   PRIORITY_CONFIG
 } from "@/constants";
+import { STATIC_TEXTS } from "@/constants/staticTexts";
 
 interface AbendDetailModalProps {
   abend: Abend | null;
@@ -114,12 +115,12 @@ export default function AbendDetailModal({ abend, open, onClose, defaultTab = "o
         <DialogHeader className="pb-4">
           <div>
             <DialogTitle className="text-2xl font-bold text-gray-900">
-              Abend Details
+              {STATIC_TEXTS.ABEND_DETAILS}
             </DialogTitle>
-            <p className="text-sm text-gray-600 mb-4">Tracking ID: {detailedAbend.trackingId}</p>
-            <div className="text-sm text-gray-500 mb-4">
-              {abend.jobName} • Order ID: {`06${abend.id.slice(-3)}`} • {new Date(abend.timestamp).toLocaleString()}
-            </div>
+            <p className="text-sm text-gray-600 mb-4">{STATIC_TEXTS.TRACKING_ID} {detailedAbend.trackingId}</p>
+                          <div className="text-sm text-gray-500 mb-4">
+                {abend.jobName} • {STATIC_TEXTS.ORDER_ID} {`06${abend.id.slice(-3)}`} • {new Date(abend.timestamp).toLocaleString()}
+              </div>
           </div>
         </DialogHeader>
 

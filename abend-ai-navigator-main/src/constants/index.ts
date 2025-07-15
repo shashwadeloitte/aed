@@ -8,6 +8,7 @@ import {
   XCircle
 } from "lucide-react";
 import styles from "@/components/AIInsightsPanel.module.css";
+import { STATIC_TEXTS } from "@/constants/staticTexts";
 
 // Types and Interfaces
 export interface Abend {
@@ -48,18 +49,18 @@ export interface ConfidenceItem {
 
 // Status Configuration for AbendTable
 export const ABEND_STATUS_CONFIG = {
-  "ABEND_DETECTED": { label: "Abend Detected", variant: "destructive" as const },
-  "REMEDIATION_SUGGESTIONS_GENERATED": { label: "Remediation Suggestions Generated", variant: "secondary" as const },
-  "PENDING_MANUAL_APPROVAL": { label: "Pending Manual Approval", variant: "outline" as const },
-  "MANUAL_ANALYSIS_REQUIRED": { label: "Manual Analysis Required", variant: "secondary" as const },
-  "resolved": { label: "Resolved", variant: "default" as const },
+  "ABEND_DETECTED": { label: STATIC_TEXTS.ABEND_DETECTED_LABEL, variant: "destructive" as const },
+  "REMEDIATION_SUGGESTIONS_GENERATED": { label: STATIC_TEXTS.REMEDIATION_SUGGESTIONS_GENERATED_LABEL, variant: "secondary" as const },
+  "PENDING_MANUAL_APPROVAL": { label: STATIC_TEXTS.PENDING_MANUAL_APPROVAL_LABEL, variant: "outline" as const },
+  "MANUAL_ANALYSIS_REQUIRED": { label: STATIC_TEXTS.MANUAL_ANALYSIS_REQUIRED, variant: "secondary" as const },
+  "resolved": { label: STATIC_TEXTS.RESOLVED_LABEL, variant: "default" as const },
 };
 
 // Priority Configuration for AbendTable
 export const PRIORITY_CONFIG = {
-  high: { label: "High", className: "text-error" },
-  medium: { label: "Medium", className: "text-warning-foreground" },
-  low: { label: "Low", className: "text-muted-foreground" },
+  high: { label: STATIC_TEXTS.PRIORITY_HIGH_LABEL, className: "text-error" },
+  medium: { label: STATIC_TEXTS.PRIORITY_MEDIUM_LABEL, className: "text-warning-foreground" },
+  low: { label: STATIC_TEXTS.PRIORITY_LOW_LABEL, className: "text-muted-foreground" },
 };
 
 // Status Configuration for StatusCard
@@ -217,7 +218,7 @@ export const MOCK_ABENDS: Abend[] = [
 // Performance Metrics Data
 export const PERFORMANCE_METRICS: Metric[] = [
   {
-    title: "Response Time",
+    title: STATIC_TEXTS.RESPONSE_TIME,
     value: "1.2s",
     target: "< 2s",
     progress: 85,
@@ -226,7 +227,7 @@ export const PERFORMANCE_METRICS: Metric[] = [
     icon: Clock
   },
   {
-    title: "Automation Rate",
+    title: STATIC_TEXTS.AUTOMATION_RATE_METRIC,
     value: "87%",
     target: "90%",
     progress: 87,
@@ -235,7 +236,7 @@ export const PERFORMANCE_METRICS: Metric[] = [
     icon: Zap
   },
   {
-    title: "Resolution Accuracy",
+    title: STATIC_TEXTS.RESOLUTION_ACCURACY,
     value: "94%",
     target: "95%",
     progress: 94,
@@ -244,7 +245,7 @@ export const PERFORMANCE_METRICS: Metric[] = [
     icon: Target
   },
   {
-    title: "SLA Compliance",
+    title: STATIC_TEXTS.SLA_COMPLIANCE,
     value: "92%",
     target: "98%",
     progress: 92,
@@ -257,8 +258,8 @@ export const PERFORMANCE_METRICS: Metric[] = [
 // AI Confidence Distribution Data
 export const CONFIDENCE_DATA: ConfidenceItem[] = [
   {
-    label: "High Confidence",
-    range: "85-100%", 
+    label: STATIC_TEXTS.HIGH_CONFIDENCE,
+    range: STATIC_TEXTS.HIGH_CONFIDENCE_RANGE, 
     value: 68,
     containerClass: styles.confidenceHigh,
     textColor: styles.textGreen,
@@ -266,11 +267,11 @@ export const CONFIDENCE_DATA: ConfidenceItem[] = [
     badgeClass: styles.badgeBgGreen,
     progressClass: styles.progressGreen,
     icon: CheckCircle,
-    description: "AI can automatically resolve these abends with high accuracy"
+    description: STATIC_TEXTS.HIGH_CONFIDENCE_DESC
   },
   {
-    label: "Medium Confidence", 
-    range: "60-84%",
+    label: STATIC_TEXTS.MEDIUM_CONFIDENCE, 
+    range: STATIC_TEXTS.MEDIUM_CONFIDENCE_RANGE,
     value: 22,
     containerClass: styles.confidenceMedium,
     textColor: styles.textAmber,
@@ -278,11 +279,11 @@ export const CONFIDENCE_DATA: ConfidenceItem[] = [
     badgeClass: styles.badgeBgAmber,
     progressClass: styles.progressAmber,
     icon: Shield,
-    description: "Requires human approval before implementing AI recommendations"
+    description: STATIC_TEXTS.MEDIUM_CONFIDENCE_DESC
   },
   {
-    label: "Low Confidence",
-    range: "40-59%",
+    label: STATIC_TEXTS.LOW_CONFIDENCE,
+    range: STATIC_TEXTS.LOW_CONFIDENCE_RANGE,
     value: 7,
     containerClass: styles.confidenceLow,
     textColor: styles.textOrange,
@@ -290,11 +291,11 @@ export const CONFIDENCE_DATA: ConfidenceItem[] = [
     badgeClass: styles.badgeBgOrange,
     progressClass: styles.progressRed,
     icon: AlertTriangle,
-    description: "Manual investigation needed with AI providing supporting analysis"
+    description: STATIC_TEXTS.LOW_CONFIDENCE_DESC
   },
   {
-    label: "No Confidence",
-    range: "0-39%",
+    label: STATIC_TEXTS.VERY_LOW_CONFIDENCE,
+    range: STATIC_TEXTS.VERY_LOW_CONFIDENCE_RANGE,
     value: 3,
     containerClass: styles.confidenceNone,
     textColor: styles.textRed,
@@ -302,7 +303,7 @@ export const CONFIDENCE_DATA: ConfidenceItem[] = [
     badgeClass: styles.badgeBgRed,
     progressClass: styles.progressRed,
     icon: XCircle,
-    description: "Completely manual resolution required, unknown abend patterns"
+    description: STATIC_TEXTS.VERY_LOW_CONFIDENCE_DESC
   }
 ];
 
@@ -311,11 +312,11 @@ export const TOTAL_ABENDS = 156;
 
 // Application Constants
 export const APP_CONFIG = {
-  MOBILE_BREAKPOINT: 768,
-  PAGINATION_DEFAULT_SIZE: 5,
+  MOBILE_BREAKPOINT: STATIC_TEXTS.MOBILE_BREAKPOINT,
+  PAGINATION_DEFAULT_SIZE: STATIC_TEXTS.PAGINATION_DEFAULT_SIZE,
   DEFAULT_USER: {
-    name: "John Smith",
-    role: "System Administrator"
+    name: STATIC_TEXTS.DEFAULT_USER_NAME,
+    role: STATIC_TEXTS.DEFAULT_USER_ROLE
   }
 } as const;
 
