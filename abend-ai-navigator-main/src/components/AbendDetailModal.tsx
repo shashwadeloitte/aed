@@ -284,14 +284,16 @@ export default function AbendDetailModal({
                     <Badge
                       className={cn(
                         "ml-2",
-                        abend.status === "resolved"
-                          ? "bg-green-100 text-green-800"
-                          : abend.status === "PENDING_MANUAL_APPROVAL"
+                        ABEND_STATUS_CONFIG[abend.status]?.variant === "destructive"
+                          ? "bg-red-100 text-red-800"
+                          : ABEND_STATUS_CONFIG[abend.status]?.variant === "outline"
                           ? "bg-yellow-100 text-yellow-800"
-                          : "bg-red-100 text-red-800"
+                          : ABEND_STATUS_CONFIG[abend.status]?.variant === "secondary"
+                          ? "bg-blue-100 text-blue-800"
+                          : "bg-green-100 text-green-800"
                       )}
                     >
-                      {ABEND_STATUS_CONFIG[abend.status].label}
+                      {ABEND_STATUS_CONFIG[abend.status]?.label || abend.status}
                     </Badge>
                   </div>
                   <div>
@@ -299,7 +301,7 @@ export default function AbendDetailModal({
                       {STATIC_TEXTS.TABLE_STATUS}
                     </label>
                     <p className="text-sm font-medium">
-                      {ABEND_STATUS_CONFIG[abend.status].label}
+                      {ABEND_STATUS_CONFIG[abend.status]?.label || abend.status}
                     </p>
                   </div>
                   <div>
@@ -866,7 +868,7 @@ export default function AbendDetailModal({
                         AI remediation suggestions generated
                       </p>
                       <p className="text-xs text-gray-500 mt-1">
-                        Status: {ABEND_STATUS_CONFIG[abend.status].label} •
+                        Status: {ABEND_STATUS_CONFIG[abend.status]?.label || abend.status} •
                         Assigned To: {abend.assignedTo}
                       </p>
                     </div>

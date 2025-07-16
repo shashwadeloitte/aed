@@ -13,6 +13,7 @@ export const STATIC_TEXTS = {
   APPROVE: "Approve",
   REJECT: "Reject",
   CLOSE: "Close",
+  LOGOUT: "Logout",
   
   // Dashboard Header
   DASHBOARD_REFRESHED_TITLE: "Dashboard Refreshed",
@@ -634,6 +635,12 @@ export const STATIC_TEXTS = {
   
   // Modal Titles
   AI_ANALYSIS_TITLE: "AI Analysis",
+  LOG_EXTRACTION_ERROR_LABEL: "Log Extraction Error",
+  AI_ANALYSIS_INITIATED_LABEL: "AI Analysis Initiated",
+  AUTOMATED_REMEDIATION_IN_PROGRESS_LABEL: "Automated Remediation In Progress",
+  REMEDIATION_ERROR_LABEL: "Remediation Error",
+  VERIFICATION_IN_PROGRESS_LABEL: "Verification In Progress",
+  RESOLVED_WITH_WORKAROUND_LABEL: "Resolved with Workaround",
 };
 
 // Export individual text groups for easier imports

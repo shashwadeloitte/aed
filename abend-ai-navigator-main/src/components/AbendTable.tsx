@@ -184,8 +184,8 @@ export function AbendTable({
           "status"
         ) as keyof typeof ABEND_STATUS_CONFIG;
         return (
-          <Badge variant={ABEND_STATUS_CONFIG[status].variant}>
-            {ABEND_STATUS_CONFIG[status].label}
+          <Badge variant={ABEND_STATUS_CONFIG[status]?.variant || "outline"}>
+            {ABEND_STATUS_CONFIG[status]?.label || status}
           </Badge>
         );
       },
@@ -403,7 +403,7 @@ export function AbendTable({
                     </SelectItem>
                     {uniqueStatuses.map((status) => (
                       <SelectItem key={status} value={status}>
-                        {ABEND_STATUS_CONFIG[status].label}
+                        {ABEND_STATUS_CONFIG[status]?.label || status}
                       </SelectItem>
                     ))}
                   </SelectContent>

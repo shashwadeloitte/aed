@@ -1,6 +1,6 @@
-import { useOktaAuth } from '@okta/okta-react';
-import { Button } from '@/components/ui/button';
-import { LogIn, LogOut, User } from 'lucide-react';
+import { useOktaAuth } from "@okta/okta-react";
+import { Button } from "@/components/ui/button";
+import { LogIn, LogOut, User } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -8,8 +8,9 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+} from "@/components/ui/dropdown-menu";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import appLogo from "@/assets/channels4_profile.jpg";
 
 export default function LoginButton() {
   const { oktaAuth, authState } = useOktaAuth();
@@ -18,7 +19,7 @@ export default function LoginButton() {
     try {
       await oktaAuth.signInWithRedirect();
     } catch (error) {
-      console.error('Login error:', error);
+      console.error("Login error:", error);
     }
   };
 
@@ -26,7 +27,7 @@ export default function LoginButton() {
     try {
       await oktaAuth.signOut();
     } catch (error) {
-      console.error('Logout error:', error);
+      console.error("Logout error:", error);
     }
   };
 
@@ -48,16 +49,20 @@ export default function LoginButton() {
   }
 
   const userInfo = authState.idToken?.claims;
-  const userName = userInfo?.name || userInfo?.preferred_username || 'User';
+  const userName = userInfo?.name || userInfo?.preferred_username || "User";
   const userEmail = userInfo?.email;
-  const userInitials = userName.split(' ').map(n => n[0]).join('').toUpperCase();
+  const userInitials = userName
+    .split(" ")
+    .map((n) => n[0])
+    .join("")
+    .toUpperCase();
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="relative h-8 w-8 rounded-full">
           <Avatar className="h-8 w-8">
-            <AvatarImage src={userInfo?.picture} alt={userName} />
+            <AvatarImage src={appLogo} alt={userName} />
             <AvatarFallback>{userInitials}</AvatarFallback>
           </Avatar>
         </Button>
@@ -86,4 +91,4 @@ export default function LoginButton() {
       </DropdownMenuContent>
     </DropdownMenu>
   );
-} 
+}

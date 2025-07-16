@@ -51,10 +51,15 @@ export interface ConfidenceItem {
 // Status Configuration for AbendTable
 export const ABEND_STATUS_CONFIG = {
   "ABEND_DETECTED": { label: STATIC_TEXTS.ABEND_DETECTED_LABEL, variant: "destructive" as const },
+  "LOG_EXTRACTION_ERROR": { label: STATIC_TEXTS.LOG_EXTRACTION_ERROR_LABEL, variant: "destructive" as const },
+  "AI_ANALYSIS_INITIATED": { label: STATIC_TEXTS.AI_ANALYSIS_INITIATED_LABEL, variant: "secondary" as const },
   "REMEDIATION_SUGGESTIONS_GENERATED": { label: STATIC_TEXTS.REMEDIATION_SUGGESTIONS_GENERATED_LABEL, variant: "secondary" as const },
   "PENDING_MANUAL_APPROVAL": { label: STATIC_TEXTS.PENDING_MANUAL_APPROVAL_LABEL, variant: "outline" as const },
-  "MANUAL_ANALYSIS_REQUIRED": { label: STATIC_TEXTS.MANUAL_ANALYSIS_REQUIRED, variant: "secondary" as const },
-  "resolved": { label: STATIC_TEXTS.RESOLVED_LABEL, variant: "default" as const },
+  "AUTOMATED_REMEDIATION_IN_PROGRESS": { label: STATIC_TEXTS.AUTOMATED_REMEDIATION_IN_PROGRESS_LABEL, variant: "secondary" as const },
+  "REMEDIATION_ERROR": { label: STATIC_TEXTS.REMEDIATION_ERROR_LABEL, variant: "destructive" as const },
+  "VERIFICATION_IN_PROGRESS": { label: STATIC_TEXTS.VERIFICATION_IN_PROGRESS_LABEL, variant: "secondary" as const },
+  "RESOLVED": { label: STATIC_TEXTS.RESOLVED_LABEL, variant: "default" as const },
+  "RESOLVED_WITH_WORKAROUND": { label: STATIC_TEXTS.RESOLVED_WITH_WORKAROUND_LABEL, variant: "default" as const },
 };
 
 // Priority Configuration for AbendTable

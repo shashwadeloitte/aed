@@ -39,8 +39,19 @@ import {
   XCircle,
 } from "lucide-react";
 import appLogo from "@/assets/channels4_profile.jpg";
+import { useOktaAuth } from "@okta/okta-react";
 
 const Index = () => {
+  const { oktaAuth, authState } = useOktaAuth();
+  const userInfo = authState?.idToken?.claims;
+  const userName = userInfo?.name || userInfo?.preferred_username || STATIC_TEXTS.DEFAULT_USER_NAME;
+  const handleLogout = async () => {
+    try {
+      await oktaAuth.signOut();
+    } catch (error) {
+      console.error("Logout error:", error);
+    }
+  };
   const [currentTime, setCurrentTime] = useState(new Date());
   const [systemStatus, setSystemStatus] = useState(STATIC_TEXTS.STATUS_OPERATIONAL);
   const [activeTab, setActiveTab] = useState(STATIC_TEXTS.TAB_ABENDS);
@@ -200,10 +211,24 @@ const Index = () => {
                     {STATIC_TEXTS.REFRESH}
                   </Button>
                 </div>
-
-                <div className="pl-4 border-l border-primary-foreground/20">
-                  <LoginButton />
-                </div>
+                {authState?.isAuthenticated && (
+                  <div className="flex items-center gap-4 pl-4 border-l border-white/30">
+                    <div className="flex items-center gap-3 bg-white/10 px-4 py-2 rounded-lg shadow-sm">
+                      <span className="font-semibold text-base capitalize tracking-wide text-white">
+                        {userName}
+                      </span>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={handleLogout}
+                        className="bg-white text-gray-800 border border-gray-300 shadow-sm hover:bg-red-600 hover:text-white hover:border-red-600 transition-colors"
+                      >
+                        <LogOut className="h-4 w-4 mr-1" />
+                        {STATIC_TEXTS.LOGOUT}
+                      </Button>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </div>
