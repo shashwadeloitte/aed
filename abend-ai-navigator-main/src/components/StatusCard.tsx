@@ -7,7 +7,7 @@ import { STATUS_CARD_CONFIG } from "@/constants";
 
 interface StatusCardProps {
   title: string;
-  count: number;
+  count: number | string;
   trend: number;
   status: "critical" | "warning" | "success" | "info";
   description: string;
@@ -40,21 +40,12 @@ export function StatusCard({ title, count, trend, status, description, icon, onC
           <div className="flex items-center justify-between">
             <div>
               <div className={cn("text-3xl font-bold", styles[config.textClass])}>
-                {count.toLocaleString()}
+                {typeof count === 'number' ? count.toLocaleString() : count}
               </div>
               <p className="text-xs text-muted-foreground mt-1">
                 {description}
               </p>
             </div>
-            <Badge 
-              variant={config.badgeVariant}
-              className={cn(
-                "text-xs font-medium",
-                trend > 0 ? styles.trendPositive : trend < 0 ? styles.trendNegative : styles.trendNeutral
-              )}
-            >
-              {trend > 0 ? "+" : ""}{trend}%
-            </Badge>
           </div>
         </CardContent>
       </Card>

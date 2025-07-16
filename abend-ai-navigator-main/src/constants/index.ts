@@ -22,6 +22,7 @@ export interface Abend {
   assignedTo: string;
   priority: "high" | "medium" | "low";
   timestamp: string;
+  domain?: string;
 }
 
 export interface Metric {
@@ -58,9 +59,9 @@ export const ABEND_STATUS_CONFIG = {
 
 // Priority Configuration for AbendTable
 export const PRIORITY_CONFIG = {
-  high: { label: STATIC_TEXTS.PRIORITY_HIGH_LABEL, className: "text-error" },
-  medium: { label: STATIC_TEXTS.PRIORITY_MEDIUM_LABEL, className: "text-warning-foreground" },
-  low: { label: STATIC_TEXTS.PRIORITY_LOW_LABEL, className: "text-muted-foreground" },
+  high: { label: STATIC_TEXTS.PRIORITY_HIGH_LABEL, className: "text-red-600 font-semibold" },
+  medium: { label: STATIC_TEXTS.PRIORITY_MEDIUM_LABEL, className: "text-yellow-600 font-semibold" },
+  low: { label: STATIC_TEXTS.PRIORITY_LOW_LABEL, className: "text-green-600 font-semibold" },
 };
 
 // Status Configuration for StatusCard
@@ -104,6 +105,7 @@ export const MOCK_ABENDS: Abend[] = [
     assignedTo: "AI System",
     priority: "high",
     timestamp: "2024-12-19 14:30:00",
+    domain: "MM",
   },
   {
     id: "ABD-2024-002", 
@@ -116,6 +118,7 @@ export const MOCK_ABENDS: Abend[] = [
     assignedTo: "John Smith",
     priority: "medium",
     timestamp: "2024-12-19 12:30:00",
+    domain: "CM",
   },
   {
     id: "ABD-2024-003",
@@ -128,6 +131,7 @@ export const MOCK_ABENDS: Abend[] = [
     assignedTo: "AI System",
     priority: "high",
     timestamp: "2024-12-19 13:30:00",
+    domain: "SCLC",
   },
   {
     id: "ABD-2024-004",
@@ -140,6 +144,7 @@ export const MOCK_ABENDS: Abend[] = [
     assignedTo: "Sarah Johnson", 
     priority: "low",
     timestamp: "2024-07-03 06:45:00",
+    domain: "WDS",
   },
   {
     id: "ABD-2024-005",
@@ -152,6 +157,7 @@ export const MOCK_ABENDS: Abend[] = [
     assignedTo: "Mike Chen",
     priority: "medium",
     timestamp: "2024-12-19 14:00:00",
+    domain: "CIW",
   },
   {
     id: "ABD-2024-006",
@@ -164,6 +170,7 @@ export const MOCK_ABENDS: Abend[] = [
     assignedTo: "AI System",
     priority: "low",
     timestamp: "2024-07-03 12:00:00",
+    domain: "MM",
   },
   {
     id: "ABD-2024-007",
@@ -176,6 +183,7 @@ export const MOCK_ABENDS: Abend[] = [
     assignedTo: "AI System",
     priority: "medium",
     timestamp: "2024-07-03 13:00:00",
+    domain: "CM",
   },
   {
     id: "ABD-2024-008",
@@ -188,6 +196,7 @@ export const MOCK_ABENDS: Abend[] = [
     assignedTo: "Sarah Johnson",
     priority: "low",
     timestamp: "2024-07-03 14:00:00",
+    domain: "SCLC",
   },
   {
     id: "ABD-2024-009",
@@ -200,6 +209,7 @@ export const MOCK_ABENDS: Abend[] = [
     assignedTo: "Mike Chen",
     priority: "high",
     timestamp: "2024-07-03 15:00:00",
+    domain: "WDS",
   },
   {
     id: "ABD-2024-010",
@@ -212,6 +222,7 @@ export const MOCK_ABENDS: Abend[] = [
     assignedTo: "AI System",
     priority: "low",
     timestamp: "2024-07-03 16:00:00",
+    domain: "CIW",
   },
 ];
 

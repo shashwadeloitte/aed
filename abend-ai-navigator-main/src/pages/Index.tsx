@@ -38,11 +38,12 @@ import {
   User,
   XCircle,
 } from "lucide-react";
+import appLogo from "@/assets/channels4_profile.jpg";
 
 const Index = () => {
   const [currentTime, setCurrentTime] = useState(new Date());
   const [systemStatus, setSystemStatus] = useState(STATIC_TEXTS.STATUS_OPERATIONAL);
-  const [activeTab, setActiveTab] = useState(STATIC_TEXTS.TAB_OVERVIEW);
+  const [activeTab, setActiveTab] = useState(STATIC_TEXTS.TAB_ABENDS);
   const [appliedFilter, setAppliedFilter] = useState<string | null>(null);
   const [filterTimestamp, setFilterTimestamp] = useState<number>(0);
   const [selectedAbend, setSelectedAbend] = useState<Abend | null>(null);
@@ -151,6 +152,12 @@ const Index = () => {
     setSelectedAbend(null);
   };
 
+  // function to clear the card filter
+  const clearCardFilter = () => {
+    setAppliedFilter(null);
+    setFilterTimestamp(Date.now());
+  };
+
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
@@ -161,9 +168,9 @@ const Index = () => {
               <div className="flex items-center gap-3">
                 <div className="w-16 h-16 rounded-lg flex items-center justify-center">
                   <img
-                    src="https://static.wixstatic.com/media/89b1fb_4876b9437e7b46359300abf5fc54901d~mv2.png/v1/fill/w_270,h_270,al_c/Elevance%20Health%20Logo_edited.png"
-                    alt="Elevance Health Logo"
-                    className="h-16 w-16 object-contain"
+                    src={appLogo}
+                    alt="App Logo"
+                    className="h-16 w-16 object-contain rounded-lg"
                   />
                 </div>
                 <div>
@@ -248,7 +255,7 @@ const Index = () => {
           />
           <StatusCard
             title={STATIC_TEXTS.AUTOMATION_RATE}
-            count={abendCounts.automationRate}
+            count={abendCounts.automationRate + '%'}
             trend={+3}
             status="info"
             description={STATIC_TEXTS.PERCENTAGE_AUTOMATED}
@@ -264,13 +271,13 @@ const Index = () => {
           className="space-y-6"
         >
           <TabsList className="grid w-full grid-cols-4">
-            <TabsTrigger value={STATIC_TEXTS.TAB_OVERVIEW} className="flex items-center gap-2">
-              <Activity className="h-4 w-4" />
-              {STATIC_TEXTS.OVERVIEW}
-            </TabsTrigger>
             <TabsTrigger value={STATIC_TEXTS.TAB_ABENDS} className="flex items-center gap-2">
               <Database className="h-4 w-4" />
               {STATIC_TEXTS.ABENDS}
+            </TabsTrigger>
+            <TabsTrigger value={STATIC_TEXTS.TAB_OVERVIEW} className="flex items-center gap-2">
+              <Activity className="h-4 w-4" />
+              {STATIC_TEXTS.OVERVIEW}
             </TabsTrigger>
             <TabsTrigger
               value="ai-insights"
@@ -525,7 +532,11 @@ const Index = () => {
           </TabsContent>
 
           <TabsContent value={STATIC_TEXTS.TAB_ABENDS}>
-            <AbendTable appliedFilter={appliedFilter} filterTimestamp={filterTimestamp} />
+            <AbendTable 
+              appliedFilter={appliedFilter} 
+              filterTimestamp={filterTimestamp} 
+              onClearCardFilter={clearCardFilter}
+            />
           </TabsContent>
 
           <TabsContent value="ai-insights">

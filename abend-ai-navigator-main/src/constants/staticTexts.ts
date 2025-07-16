@@ -4,6 +4,7 @@ export const STATIC_TEXTS = {
   APP_TITLE: "ADR Portal",
   APP_SUBTITLE: "AI-Assisted Batch Diagnosis & Remediation",
   LOGO_ALT: "Elevance Health Logo",
+  AI_SYSTEM: "AI System",
   
   // Navigation and Buttons
   REFRESH: "Refresh",
@@ -112,6 +113,7 @@ export const STATIC_TEXTS = {
   ABEND_TYPE: "Abend Type",
   PRIORITY: "Priority",
   STATUS: "Status",
+  ADR_STATUS: "ADR Status",
   CONFIDENCE: "Confidence",
   INCIDENT_NUMBER: "Incident Number",
   SEVERITY: "Severity",
@@ -415,11 +417,12 @@ export const STATIC_TEXTS = {
   TABLE_JOB_NAME: "Job Name",
   TABLE_JOB_ID: "Job ID",
   TABLE_TYPE: "Type",
-  TABLE_STATUS: "Status",
+  TABLE_STATUS: "Job Status",
   TABLE_TIMESTAMP: "Timestamp",
   TABLE_AI_CONFIDENCE: "AI Confidence",
   TABLE_ASSIGNED_TO: "Assigned To",
   TABLE_PRIORITY: "Priority",
+  TABLE_DOMAIN_AREA: "Domain Area", 
   TABLE_ACTIONS: "Actions",
   
   // Status Values
@@ -438,9 +441,18 @@ export const STATIC_TEXTS = {
   FILTER_ACTIVE: "active",
   FILTER_ALL_STATUSES: "All Statuses",
   FILTER_ALL_PRIORITIES: "All Priorities",
+  FILTER_ALL_DOMAINS: "All Domains",
+  FILTER_BY_STATUS: "Filter by job status",
+  SEARCH_BY_JOB_NAME: "Search by job name",
+  PICK_A_DATE: "Pick a date",
+  NO_ABENDS_FOUND: "No abends found matching your search criteria.",
+  SHOWING: "Showing",
+  OF: "of",
+  RESULTS: "results",
+  ROWS_PER_PAGE: "Rows per page:",
+  PAGE: "Page",
   
   // System Values
-  AI_SYSTEM: "AI System",
   NOW: "now",
   SEC_AGO: "sec ago",
   
@@ -455,7 +467,8 @@ export const STATIC_TEXTS = {
   
   // Placeholders
   PLACEHOLDER_PRIORITY: "Priority",
-  PLACEHOLDER_STATUS: "Status",
+  PLACEHOLDER_STATUS: "Job Status",
+  PLACEHOLDER_DOMAIN: "Domain Area", // Added for domain area filter
   
   // Dialog Content
   DIALOG_MAX_WIDTH: "max-w-6xl",
@@ -512,6 +525,7 @@ export const STATIC_TEXTS = {
   KEY_CONFIDENCE: "confidence",
   KEY_ASSIGNED_TO: "assignedTo",
   KEY_PRIORITY: "priority",
+  KEY_DOMAIN: "domain", // Added for domain area column
   
   // Filter Functions
   FILTER_INCLUDES_STRING: "includesString",
@@ -609,6 +623,17 @@ export const STATIC_TEXTS = {
   
   // Transitions
   TRANSITION_COLORS: "transition-colors",
+  
+  // Domain Area Values
+  DOMAIN_MM: "MM",
+  DOMAIN_CM: "CM",
+  DOMAIN_SCLC: "SCLC",
+  DOMAIN_WDS: "WDS",
+  DOMAIN_CIW: "CIW",
+  DOMAIN_AREA_FILTER_LABEL: "Domain Area",
+  
+  // Modal Titles
+  AI_ANALYSIS_TITLE: "AI Analysis",
 };
 
 // Export individual text groups for easier imports
