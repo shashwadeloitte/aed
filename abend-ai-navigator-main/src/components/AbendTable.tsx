@@ -119,7 +119,7 @@ export function AbendTable({
             abendType: item.jobName, // or item.severity if you want abend type as severity
             jobStatus: item.jobStatus,
             severity: item.severity,
-            assignedTo: item.assigned_to || item.serviceNowGroup || "-",
+            assignedTo: item.assigned_to,
             timestamp: item.abendedAt,
             domain: item.domainArea,
             confidence: item.ai_confidence,
@@ -220,9 +220,7 @@ export function AbendTable({
       header: STATIC_TEXTS.TABLE_TIMESTAMP,
       cell: ({ row }) => (
         <div className="text-muted-foreground">
-          {row.original.timestamp
-            ? new Date(row.original.timestamp).toLocaleString()
-            : "-"}
+          {row.original.timestamp || "-"}
         </div>
       ),
     },
