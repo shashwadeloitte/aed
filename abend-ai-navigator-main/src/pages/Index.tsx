@@ -18,9 +18,9 @@ import {
   PERFORMANCE_METRICS,
   CONFIDENCE_DATA,
   TOTAL_ABENDS,
-  MOCK_ABENDS,
   type Abend,
 } from "@/constants";
+import { useAbendsApi } from "@/hooks/useAbendsApi";
 import { STATIC_TEXTS } from "@/constants/staticTexts";
 import {
   AlertTriangle,
@@ -61,31 +61,40 @@ const Index = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [lastRefreshTime, setLastRefreshTime] = useState<Date | null>(null);
 
-  // Calculate actual counts from MOCK_ABENDS data
-  const getAbendCounts = () => {
-    const counts = {
-      active: MOCK_ABENDS.filter(abend => 
-        abend.status === STATIC_TEXTS.STATUS_ABEND_DETECTED || 
-        abend.status === STATIC_TEXTS.STATUS_REMEDIATION_SUGGESTIONS_GENERATED || 
-        abend.status === STATIC_TEXTS.STATUS_MANUAL_ANALYSIS_REQUIRED
-      ).length,
-      resolved: MOCK_ABENDS.filter(abend => abend.status === STATIC_TEXTS.STATUS_RESOLVED).length,
-      pendingApproval: MOCK_ABENDS.filter(abend => abend.status === STATIC_TEXTS.STATUS_PENDING_MANUAL_APPROVAL).length,
-      total: MOCK_ABENDS.length,
-      automationRate: 0
-    };
-    
-    // Calculate automation rate (percentage of abends handled by AI System)
-    const automatedCount = MOCK_ABENDS.filter(abend => abend.assignedTo === STATIC_TEXTS.AI_SYSTEM).length;
-    counts.automationRate = Math.round((automatedCount / counts.total) * 100);
-    
-    return counts;
+
+  // Use abends API for counts and recent activity
+  const { data: abendsApi, loading: abendsLoading, error: abendsError, fetchAbends } = useAbendsApi();
+
+  // Map API data to Abend type for dashboard use
+  const abends: Abend[] = Array.isArray(abendsApi)
+    ? abendsApi.map((item) => {
+        return {
+          id: item.abendId,
+          jobName: item.jobName,
+          jobId: item.jobId,
+          abendType: item.severity,
+          jobStatus: item.jobStatus,
+          severity: item.severity,
+          assignedTo: item.serviceNowGroup,
+          timestamp: item.abendedAt,
+          domain: item.domainArea,
+        };
+      })
+    : [];
+
+  const abendCounts = {
+    active: abends.filter(abend =>
+      abend.jobStatus === STATIC_TEXTS.STATUS_ABEND_DETECTED ||
+      abend.jobStatus === STATIC_TEXTS.STATUS_REMEDIATION_SUGGESTIONS_GENERATED ||
+      abend.jobStatus === STATIC_TEXTS.STATUS_MANUAL_ANALYSIS_REQUIRED
+    ).length,
+    resolved: abends.filter(abend => abend.jobStatus === STATIC_TEXTS.STATUS_RESOLVED).length,
+    pendingApproval: abends.filter(abend => abend.jobStatus === STATIC_TEXTS.STATUS_PENDING_MANUAL_APPROVAL).length,
+    total: abends.length,
+    automationRate: abends.length > 0 ? Math.round((abends.filter(abend => abend.assignedTo === STATIC_TEXTS.AI_SYSTEM).length / abends.length) * 100) : 0
   };
 
-  const abendCounts = getAbendCounts();
-
-  // Use actual abend data from the table for recent activity
-  const recentActivityAbends = MOCK_ABENDS.slice(0, 4); // Get first 4 abends from table data
+  const recentActivityAbends = abends.slice(0, 4);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -362,16 +371,16 @@ const Index = () => {
                           className="flex items-start gap-3 p-3 border rounded-lg hover:bg-muted/50 cursor-pointer"
                           onClick={() => handleActivityClick(abend)}
                         >
-                          <div className={`w-2 h-2 ${getStatusColor(abend.status)} rounded-full mt-2`}></div>
+                          <div className={`w-2 h-2 ${getStatusColor(abend.jobStatus)} rounded-full mt-2`}></div>
                           <div className="flex-1">
                             <div className="font-medium text-sm">
-                              {abend.jobName} {getStatusLabel(abend.status)}
+                              {abend.jobName} {getStatusLabel(abend.jobStatus)}
                             </div>
                             <div className="text-xs text-muted-foreground">
                               {abend.jobName} - {abend.abendType} {STATIC_TEXTS.ABEND_DETECTED}
                             </div>
                             <div className="text-xs text-muted-foreground">
-                              {abend.duration} {STATIC_TEXTS.AGO}
+                              {new Date(abend.timestamp).toLocaleTimeString()} {STATIC_TEXTS.AGO}
                             </div>
                           </div>
                         </div>

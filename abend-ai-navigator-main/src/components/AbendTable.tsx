@@ -50,11 +50,11 @@ import styles from "./AbendTable.module.css";
 import AbendDetailModal from "./AbendDetailModal";
 import {
   type Abend,
-  MOCK_ABENDS,
   ABEND_STATUS_CONFIG,
   PRIORITY_CONFIG,
   APP_CONFIG,
 } from "@/constants";
+import { useAbendsApi } from "@/hooks/useAbendsApi";
 import { STATIC_TEXTS } from "@/constants/staticTexts";
 
 interface AbendTableProps {
@@ -72,6 +72,10 @@ export function AbendTable({
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [selectedAbend, setSelectedAbend] = useState<Abend | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
+
+  // API data state
+  const { data: apiAbends, loading, error, fetchAbends } = useAbendsApi();
+  const [abends, setAbends] = useState<Abend[]>([]);
 
   // Date filter state
   const [dateRange, setDateRange] = useState<DateRange | undefined>({
@@ -95,21 +99,45 @@ export function AbendTable({
           return [];
         } else {
           // Only status filter
-          return [
-            { id: STATIC_TEXTS.KEY_STATUS, value: appliedFilter },
-          ];
+          return [{ id: STATIC_TEXTS.KEY_STATUS, value: appliedFilter }];
         }
       });
     }
     // If appliedFilter is null, do nothing (user controls filters)
   }, [appliedFilter, filterTimestamp]);
 
+  // Fetch abends on mount (manual trigger, not useEffect for API call)
+  useEffect(() => {
+    // Map API response to Abend interface for type safety
+    setAbends(
+      Array.isArray(apiAbends)
+        ? apiAbends.map((item: any) => ({
+            id: item.abendId,
+            jobName: item.jobName,
+            jobId: item.jobId,
+            abendType: item.severity, // or item.abendType if available
+            jobStatus: item.jobStatus,
+            severity: item.severity,
+            assignedTo: item.assigned_to || item.serviceNowGroup || "-",
+            timestamp: item.abendedAt,
+            // domain: item.domainArea, // if you want to keep domain
+          }))
+        : []
+    );
+  }, [apiAbends]);
+
+  // Fetch abends when component mounts (not inside useAbendsApi)
+  useEffect(() => {
+    fetchAbends();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   // Get unique values for filter dropdowns
   const uniqueStatuses = Array.from(
-    new Set(MOCK_ABENDS.map((abend) => abend.status))
+    new Set(abends.map((abend) => abend?.jobStatus))
   );
   const uniquePriorities = Array.from(
-    new Set(MOCK_ABENDS.map((abend) => abend.priority))
+    new Set(abends.map((abend) => abend?.severity))
   );
   // Domain area options as provided
   const uniqueDomains: string[] = ["MM", "CM", "SCLC", "WDS", "CIW"];
@@ -137,16 +165,16 @@ export function AbendTable({
   };
 
   // Always show all data - date filter is visual only
-  const tableData = MOCK_ABENDS;
+  const tableData = abends;
 
-  // Define columns for react-table
-  const columns: ColumnDef<Abend>[] = [
+  // Define columns for react-table using API fields directly, but accessor keys from STATIC_TEXTS
+  const columns: ColumnDef<any>[] = [
     {
       accessorKey: STATIC_TEXTS.KEY_JOB_NAME,
       header: STATIC_TEXTS.TABLE_JOB_NAME,
       cell: ({ row }) => (
         <div className="font-medium text-blue-700 underline underline-offset-2 hover:bg-blue-50 hover:text-blue-900 transition-colors duration-200 rounded px-2 py-1 cursor-pointer">
-          {row.getValue("jobName")}
+          {row.getValue(STATIC_TEXTS.KEY_JOB_NAME)}
         </div>
       ),
     },
@@ -154,129 +182,86 @@ export function AbendTable({
       accessorKey: STATIC_TEXTS.KEY_JOB_ID,
       header: STATIC_TEXTS.TABLE_JOB_ID,
       cell: ({ row }) => (
-        <div className="font-mono text-sm">{row.getValue("jobId")}</div>
+        <div className="font-mono text-sm">
+          {row.getValue(STATIC_TEXTS.KEY_JOB_ID)}
+        </div>
       ),
     },
-    // Move domain area column here
     {
       accessorKey: STATIC_TEXTS.KEY_DOMAIN,
       header: STATIC_TEXTS.TABLE_DOMAIN_AREA,
-      cell: ({ row }) => <span>{row.getValue("domain") || ""}</span>,
+      cell: ({ row }) => (
+        <span>{row.getValue(STATIC_TEXTS.KEY_DOMAIN) || ""}</span>
+      ),
     },
     {
       accessorKey: STATIC_TEXTS.KEY_ABEND_TYPE,
       header: STATIC_TEXTS.ABEND_TYPE,
-      cell: ({ row }) => {
-        const assignedTo = row.getValue("assignedTo");
-        if (assignedTo === STATIC_TEXTS.AI_SYSTEM) return "";
-        return (
-          <Badge variant="outline" className="font-mono">
-            {row.getValue("abendType")}
-          </Badge>
-        );
-      },
+      cell: ({ row }) => (
+        <Badge variant="outline" className="font-mono">
+          {row.getValue(STATIC_TEXTS.KEY_ABEND_TYPE)}
+        </Badge>
+      ),
     },
     {
       accessorKey: STATIC_TEXTS.KEY_STATUS,
       header: STATIC_TEXTS.TABLE_STATUS,
-      cell: ({ row }) => {
-        const status = row.getValue(
-          "status"
-        ) as keyof typeof ABEND_STATUS_CONFIG;
-        return (
-          <Badge variant={ABEND_STATUS_CONFIG[status]?.variant || "outline"}>
-            {ABEND_STATUS_CONFIG[status]?.label || status}
-          </Badge>
-        );
-      },
-      filterFn: (row, id, value) => {
-        if (value === STATIC_TEXTS.FILTER_ALL) return true;
-        if (value === STATIC_TEXTS.FILTER_ACTIVE) {
-          // "active" filter maps to multiple state machine statuses
-          const status = row.getValue(id) as string;
-          return (
-            status === STATIC_TEXTS.STATUS_ABEND_DETECTED ||
-            status === STATIC_TEXTS.STATUS_REMEDIATION_SUGGESTIONS_GENERATED ||
-            status === STATIC_TEXTS.STATUS_MANUAL_ANALYSIS_REQUIRED
-          );
-        }
-        return row.getValue(id) === value;
-      },
+      cell: ({ row }) => (
+        <Badge variant="outline">{row.getValue(STATIC_TEXTS.KEY_STATUS)}</Badge>
+      ),
     },
     {
       accessorKey: STATIC_TEXTS.KEY_PRIORITY,
       header: STATIC_TEXTS.TABLE_PRIORITY,
-      cell: ({ row }) => {
-        const priority = row.getValue(
-          "priority"
-        ) as keyof typeof PRIORITY_CONFIG;
-        const config = PRIORITY_CONFIG[priority];
-        if (!config) return null;
-        return <span className={config.className}>{config.label}</span>;
-      },
-      filterFn: (row, id, value) => {
-        return value === STATIC_TEXTS.FILTER_ALL || row.getValue(id) === value;
-      },
+      cell: ({ row }) => <span>{row.getValue(STATIC_TEXTS.KEY_PRIORITY)}</span>,
     },
     {
       accessorKey: STATIC_TEXTS.KEY_TIMESTAMP,
       header: STATIC_TEXTS.TABLE_TIMESTAMP,
       cell: ({ row }) => (
         <div className="text-muted-foreground">
-          {new Date(row.getValue("timestamp")).toLocaleString()}
+          {row.getValue(STATIC_TEXTS.KEY_TIMESTAMP)
+            ? new Date(
+                row.getValue(STATIC_TEXTS.KEY_TIMESTAMP)
+              ).toLocaleString()
+            : "-"}
         </div>
       ),
     },
     {
       accessorKey: STATIC_TEXTS.KEY_CONFIDENCE,
       header: STATIC_TEXTS.TABLE_AI_CONFIDENCE,
-      cell: ({ row }) => {
-        const assignedTo = row.getValue("assignedTo");
-        if (assignedTo === STATIC_TEXTS.AI_SYSTEM) return "";
-        const confidence = row.getValue("confidence") as number;
-        return (
-          <div className="flex items-center gap-2">
-            <div className="flex-1 bg-muted h-2 rounded-full overflow-hidden">
-              <div
-                className={cn(
-                  styles.confidenceBar,
-                  confidence >= 90
-                    ? styles.confidenceHigh
-                    : confidence >= 70
-                    ? styles.confidenceMedium
-                    : styles.confidenceLow
-                )}
-                style={
-                  {
-                    "--confidence-width": `${confidence}%`,
-                  } as React.CSSProperties
-                }
-              />
-            </div>
-            <span className="text-sm font-medium w-8">{confidence}%</span>
-          </div>
-        );
-      },
+      cell: ({ row }) => (
+        <span>{row.getValue(STATIC_TEXTS.KEY_CONFIDENCE)}</span>
+      ),
     },
     {
       accessorKey: STATIC_TEXTS.KEY_ASSIGNED_TO,
       header: STATIC_TEXTS.TABLE_ASSIGNED_TO,
+      cell: ({ row }) => (
+        <span>
+          {row.getValue(STATIC_TEXTS.KEY_ASSIGNED_TO) ||
+            row.getValue("serviceNowGroup") ||
+            "-"}
+        </span>
+      ),
     },
     {
       id: "actions",
       header: STATIC_TEXTS.TABLE_ACTIONS,
       cell: ({ row }) => {
         const abend = row.original;
-        if (abend.status !== STATIC_TEXTS.STATUS_PENDING_MANUAL_APPROVAL) {
-          return null; // Don't show button for non-pending statuses
+        if (
+          abend.jobStatus !==
+          STATIC_TEXTS.STATUS_PENDING_MANUAL_APPROVAL
+        ) {
+          return null;
         }
-
+        
         return (
           <Button
-            variant="outline"
-            size="sm"
             onClick={(e) => {
-              e.stopPropagation(); // Prevent row click when button is clicked
+              e.stopPropagation();
               handleViewRemediation(abend);
             }}
           >
@@ -290,29 +275,23 @@ export function AbendTable({
   const table = useReactTable({
     data: tableData,
     columns,
-    state: {
-      globalFilter,
-      columnFilters,
-    },
-    onGlobalFilterChange: setGlobalFilter,
-    onColumnFiltersChange: setColumnFilters,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
-    globalFilterFn: "includesString",
-    initialState: {
-      pagination: {
-        pageSize: APP_CONFIG.PAGINATION_DEFAULT_SIZE,
-      },
+    state: {
+      columnFilters,
+      globalFilter,
     },
+    onColumnFiltersChange: setColumnFilters,
+    onGlobalFilterChange: setGlobalFilter,
   });
-
-  // Helper functions for filter management
+  
+  // Get current filter value for a column
   const getColumnFilterValue = (columnId: string): string => {
     const filter = columnFilters.find((f) => f.id === columnId);
     return (filter?.value as string) || STATIC_TEXTS.FILTER_ALL;
   };
-
+  
   // Wrap filter setters to clear card filter only if needed
   const setColumnFilterValue = (columnId: string, value: string) => {
     if (onClearCardFilter && appliedFilter !== null) onClearCardFilter();
@@ -356,6 +335,12 @@ export function AbendTable({
   const hasActiveFilters =
     globalFilter !== "" || columnFilters.length > 0 || isDateSelectionActive();
 
+  if (loading) {
+    return <div className="p-8 text-center text-lg">Loading abends...</div>;
+  }
+  if (error) {
+    return <div className="p-8 text-center text-red-600">Error: {error}</div>;
+  }
   return (
     <>
       <Card>
@@ -364,7 +349,8 @@ export function AbendTable({
             <div>
               <CardTitle>{STATIC_TEXTS.ABENDS}</CardTitle>
               <p className="text-sm text-muted-foreground mt-1">
-                {STATIC_TEXTS.SHOWING} {table.getFilteredRowModel().rows.length} {STATIC_TEXTS.ABENDS.toLowerCase()}
+                {STATIC_TEXTS.SHOWING} {table.getFilteredRowModel().rows.length}{" "}
+                {STATIC_TEXTS.ABENDS.toLowerCase()}
               </p>
             </div>
             <div className="flex items-center justify-between gap-4 flex-wrap w-full">
@@ -372,7 +358,7 @@ export function AbendTable({
                 <div className="relative">
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                   <Input
-                    placeholder={STATIC_TEXTS.SEARCH_BY_JOB_NAME || "Search by job name"}
+                    placeholder={STATIC_TEXTS.SEARCH_BY_JOB_NAME}
                     value={globalFilter}
                     onChange={(e) => handleGlobalFilterChange(e.target.value)}
                     className="pl-10 w-80"
@@ -390,12 +376,14 @@ export function AbendTable({
                 </div>
 
                 <Select
-                  value={getColumnFilterValue("status")}
-                  onValueChange={(value) => setColumnFilterValue("status", value)}
+                  value={getColumnFilterValue(STATIC_TEXTS.KEY_STATUS)}
+                  onValueChange={(value) =>
+                    setColumnFilterValue(STATIC_TEXTS.KEY_STATUS, value)
+                  }
                 >
                   <SelectTrigger className="w-48">
                     <Filter className="h-4 w-4 mr-2" />
-                    <SelectValue placeholder={STATIC_TEXTS.FILTER_BY_STATUS || "Filter by status"} />
+                    <SelectValue placeholder={STATIC_TEXTS.FILTER_BY_STATUS} />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value={STATIC_TEXTS.FILTER_ALL}>
@@ -410,9 +398,9 @@ export function AbendTable({
                 </Select>
 
                 <Select
-                  value={getColumnFilterValue("priority")}
+                  value={getColumnFilterValue(STATIC_TEXTS.KEY_PRIORITY)}
                   onValueChange={(value) =>
-                    setColumnFilterValue("priority", value)
+                    setColumnFilterValue(STATIC_TEXTS.KEY_PRIORITY, value)
                   }
                 >
                   <SelectTrigger className="w-44">
@@ -426,34 +414,13 @@ export function AbendTable({
                     </SelectItem>
                     {uniquePriorities.map((priority) => (
                       <SelectItem key={priority} value={priority}>
-                        {PRIORITY_CONFIG[priority].label}
+                        {PRIORITY_CONFIG[priority]?.label || priority}
                       </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
 
-                {/* Domain Area Filter Dropdown */}
-                <Select
-                  value={getColumnFilterValue(STATIC_TEXTS.KEY_DOMAIN)}
-                  onValueChange={(value) =>
-                    setColumnFilterValue(STATIC_TEXTS.KEY_DOMAIN, value)
-                  }
-                >
-                  <SelectTrigger className="w-44">
-                    <SelectValue placeholder={STATIC_TEXTS.PLACEHOLDER_DOMAIN} />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value={STATIC_TEXTS.FILTER_ALL}>
-                      {STATIC_TEXTS.FILTER_ALL_DOMAINS}
-                    </SelectItem>
-                    {/* No domain options for now */}
-                    {uniqueDomains.map((domain) => (
-                      <SelectItem key={domain} value={domain}>
-                        {domain}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                {/* Domain Area Filter Dropdown removed */}
 
                 <Popover>
                   <PopoverTrigger asChild>
@@ -511,7 +478,7 @@ export function AbendTable({
               <div className="flex-1 flex items-center justify-center">
                 <div className="text-center">
                   <p className="text-muted-foreground">
-                    {STATIC_TEXTS.NO_ABENDS_FOUND || "No abends found matching your search criteria."}
+                    {STATIC_TEXTS.NO_ABENDS_FOUND}
                   </p>
                   <Button
                     variant="outline"
@@ -552,7 +519,7 @@ export function AbendTable({
                           key={row.id}
                           className={
                             `cursor-pointer transition-colors even:bg-white hover:bg-blue-50` +
-                            (row.getIsSelected() ? ' bg-blue-100' : '')
+                            (row.getIsSelected() ? " bg-blue-100" : "")
                           }
                           onClick={() => handleViewDetails(row.original)}
                         >
@@ -561,8 +528,10 @@ export function AbendTable({
                               key={cell.id}
                               className={
                                 `px-6 py-3 align-middle text-base text-gray-900 border-b border-gray-100 ` +
-                                (cellIdx === 0 ? 'rounded-bl-xl' : '') +
-                                (cellIdx === row.getVisibleCells().length - 1 ? 'rounded-br-xl' : '')
+                                (cellIdx === 0 ? "rounded-bl-xl" : "") +
+                                (cellIdx === row.getVisibleCells().length - 1
+                                  ? "rounded-br-xl"
+                                  : "")
                               }
                             >
                               {flexRender(
@@ -592,7 +561,9 @@ export function AbendTable({
                             table.getState().pagination.pageSize,
                           table.getFilteredRowModel().rows.length
                         )}{" "}
-                        {STATIC_TEXTS.OF} {table.getFilteredRowModel().rows.length} {STATIC_TEXTS.RESULTS}
+                        {STATIC_TEXTS.OF}{" "}
+                        {table.getFilteredRowModel().rows.length}{" "}
+                        {STATIC_TEXTS.RESULTS}
                       </div>
                       <div className="flex items-center gap-2">
                         <span className="text-sm text-muted-foreground">
@@ -621,7 +592,9 @@ export function AbendTable({
 
                     <div className="flex items-center gap-2">
                       <div className="text-sm text-muted-foreground">
-                        {STATIC_TEXTS.PAGE} {table.getState().pagination.pageIndex + 1} {STATIC_TEXTS.OF} {table.getPageCount()}
+                        {STATIC_TEXTS.PAGE}{" "}
+                        {table.getState().pagination.pageIndex + 1}{" "}
+                        {STATIC_TEXTS.OF} {table.getPageCount()}
                       </div>
                       <div className="flex items-center gap-1">
                         <Button
