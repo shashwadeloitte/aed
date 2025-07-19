@@ -281,8 +281,11 @@ export default function AbendDetailModal({
                       </div>
                       <div>
                         <label className="text-sm font-medium text-gray-500">Priority</label>
-                        <Badge className="ml-2 bg-gray-100 text-gray-800">
-                          {abendDetail.severity}
+                        <Badge className={cn(
+                          "ml-2",
+                          PRIORITY_CONFIG[abendDetail.severity?.toLowerCase() as keyof typeof PRIORITY_CONFIG]?.className?.replace("font-semibold", "").replace("text-", "bg-").replace("-600", "-100") + " " + PRIORITY_CONFIG[abendDetail.severity?.toLowerCase() as keyof typeof PRIORITY_CONFIG]?.className || "bg-gray-100 text-gray-800"
+                        )}>
+                          {PRIORITY_CONFIG[abendDetail.severity?.toLowerCase() as keyof typeof PRIORITY_CONFIG]?.label || abendDetail.severity}
                         </Badge>
                       </div>
                     </>
