@@ -76,6 +76,7 @@ export function AbendTable({
   // API data state
   const { data: apiAbends, loading, error, fetchAbends } = useAbendsApi();
   const [abends, setAbends] = useState<Abend[]>([]);
+  const [pageSize, setPageSize] = useState(5);
 
   // Date filter state
   const [dateRange, setDateRange] = useState<DateRange | undefined>({
@@ -129,9 +130,9 @@ export function AbendTable({
 
   // Fetch abends when component mounts (not inside useAbendsApi)
   useEffect(() => {
-    fetchAbends();
+    fetchAbends(pageSize);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [pageSize]);
 
   // Get unique values for filter dropdowns
   const uniqueStatuses = Array.from(
@@ -233,29 +234,6 @@ export function AbendTable({
           {row.original.assignedTo || "-"}
         </span>
       ),
-    },
-    {
-      id: "actions",
-      header: STATIC_TEXTS.TABLE_ACTIONS,
-      cell: ({ row }) => {
-        const abend = row.original;
-        if (
-          abend.jobStatus !==
-          STATIC_TEXTS.STATUS_PENDING_MANUAL_APPROVAL
-        ) {
-          return null;
-        }
-        return (
-          <Button
-            onClick={(e) => {
-              e.stopPropagation();
-              handleViewRemediation(abend);
-            }}
-          >
-            {STATIC_TEXTS.VIEW_DETAILS}
-          </Button>
-        );
-      },
     },
   ];
 
@@ -557,11 +535,11 @@ export function AbendTable({
                           {STATIC_TEXTS.ROWS_PER_PAGE || "Rows per page:"}
                         </span>
                         <Select
-                          value={table
-                            .getState()
-                            .pagination.pageSize.toString()}
+                          value={pageSize.toString()}
                           onValueChange={(value) => {
-                            table.setPageSize(Number(value));
+                            const newSize = Number(value);
+                            setPageSize(newSize);
+                            table.setPageSize(newSize);
                           }}
                         >
                           <SelectTrigger className="w-20">
@@ -570,8 +548,6 @@ export function AbendTable({
                           <SelectContent>
                             <SelectItem value="5">5</SelectItem>
                             <SelectItem value="10">10</SelectItem>
-                            <SelectItem value="20">20</SelectItem>
-                            <SelectItem value="50">50</SelectItem>
                           </SelectContent>
                         </Select>
                       </div>
