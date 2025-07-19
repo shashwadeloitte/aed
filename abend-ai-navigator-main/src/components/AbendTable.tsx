@@ -131,7 +131,6 @@ export function AbendTable({
   // Fetch abends when component mounts (not inside useAbendsApi)
   useEffect(() => {
     fetchAbends(pageSize);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pageSize]);
 
   // Get unique values for filter dropdowns
@@ -141,9 +140,6 @@ export function AbendTable({
   const uniquePriorities = Array.from(
     new Set(abends.map((abend) => abend?.severity))
   );
-  // Domain area options as provided
-  const uniqueDomains: string[] = ["MM", "CM", "SCLC", "WDS", "CIW"];
-
   const [modalDefaultTab, setModalDefaultTab] = useState(
     STATIC_TEXTS.TAB_OVERVIEW
   );

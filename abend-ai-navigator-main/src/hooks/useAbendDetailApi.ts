@@ -27,6 +27,25 @@ export interface UseAbendDetailApiResult {
 
 const API_BASE_URL = "https://adrportal-dev.elevancehealth.com:8000";
 
+// Mock response data
+const MOCK_ABEND_DETAIL_RESPONSE: AbendDetailApiResponse = {
+  "abendId": "ABEND#WGMP001D#01K09RDG2AQYTEQD85RQ3AEFJ5",
+  "abendedAt": "2025-06-10T07:32:00Z",
+  "jobId": "JOB24111",
+  "jobName": "WGMP001D",
+  "jobStatus": "Unknown",
+  "incidentNumber": "INC22101010",
+  "severity": "High",
+  "domainArea": "MM",
+  "processStatus": "",
+  "abendActionStatus": "",
+  "orderId": "XQXGG",
+  "faId": "",
+  "ai_confidence": "87%",
+  "assigned_to": "AI System",
+  "serviceNowGroup": "MEMBER WGS APP PROJ SUP"
+};
+
 export function useAbendDetailApi(): UseAbendDetailApiResult {
   const [data, setData] = useState<AbendDetailApiResponse | null>(null);
   const [loading, setLoading] = useState(false);
@@ -36,6 +55,15 @@ export function useAbendDetailApi(): UseAbendDetailApiResult {
     setLoading(true);
     setError(null);
     setData(null);
+    
+    // Simulate API delay
+    setTimeout(() => {
+      setData(MOCK_ABEND_DETAIL_RESPONSE);
+      setLoading(false);
+    }, 500);
+    
+    // Original API call code (commented out for now)
+    /*
     const apiUrl = `${API_BASE_URL}/ui_api/v1alpha1/abends/${encodeURIComponent(trackingId)}`;
     fetch(apiUrl)
       .then((res) => {
@@ -50,6 +78,7 @@ export function useAbendDetailApi(): UseAbendDetailApiResult {
         setError(err.message);
         setLoading(false);
       });
+    */
   }, []);
 
   return { data, loading, error, fetchAbendDetail };
