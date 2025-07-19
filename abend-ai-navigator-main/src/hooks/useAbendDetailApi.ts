@@ -36,7 +36,7 @@ export function useAbendDetailApi(): UseAbendDetailApiResult {
     setLoading(true);
     setError(null);
     setData(null);
-    const apiUrl = `${API_BASE_URL}/ui_api/v1alpha1/abends/${trackingId}`;
+    const apiUrl = `${API_BASE_URL}/ui_api/v1alpha1/abends/${encodeURIComponent(trackingId)}`;
     fetch(apiUrl)
       .then((res) => {
         if (!res.ok) throw new Error("Failed to fetch abend detail");
