@@ -39,6 +39,8 @@ export interface UseAbendsApiResult {
   fetchAbends: () => void;
 }
 
+const API_BASE_URL = "https://adrportal-dev.elevancehealth.com:8000";
+
 export function useAbendsApi(): UseAbendsApiResult {
   const [data, setData] = useState<AbendsApiAbend[]>([]);
   const [loading, setLoading] = useState(false);
@@ -47,7 +49,8 @@ export function useAbendsApi(): UseAbendsApiResult {
   const fetchAbends = useCallback(() => {
     setLoading(true);
     setError(null);
-    const apiUrl = "http://adrportal-dev.elevancehealth.com:8000/abends";
+
+    const apiUrl = `${API_BASE_URL}/ui_api/v1alpha1/abends?limit=5`;
 
     fetch(apiUrl)
       .then((res) => {
