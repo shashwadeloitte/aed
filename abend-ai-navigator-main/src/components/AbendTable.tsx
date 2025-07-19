@@ -108,19 +108,20 @@ export function AbendTable({
 
   // Fetch abends on mount (manual trigger, not useEffect for API call)
   useEffect(() => {
-    // Map API response to Abend interface for type safety
+    // Map API response to Abend interface for type safety and show all required fields
     setAbends(
       Array.isArray(apiAbends)
         ? apiAbends.map((item: any) => ({
             id: item.abendId,
             jobName: item.jobName,
             jobId: item.jobId,
-            abendType: item.severity, // or item.abendType if available
+            abendType: item.jobName, // or item.severity if you want abend type as severity
             jobStatus: item.jobStatus,
             severity: item.severity,
             assignedTo: item.assigned_to || item.serviceNowGroup || "-",
             timestamp: item.abendedAt,
-            // domain: item.domainArea, // if you want to keep domain
+            domain: item.domainArea,
+            confidence: item.ai_confidence,
           }))
         : []
     );
@@ -170,79 +171,66 @@ export function AbendTable({
   // Define columns for react-table using API fields directly, but accessor keys from STATIC_TEXTS
   const columns: ColumnDef<any>[] = [
     {
-      accessorKey: STATIC_TEXTS.KEY_JOB_NAME,
+      accessorKey: "jobName",
       header: STATIC_TEXTS.TABLE_JOB_NAME,
       cell: ({ row }) => (
         <div className="font-medium text-blue-700 underline underline-offset-2 hover:bg-blue-50 hover:text-blue-900 transition-colors duration-200 rounded px-2 py-1 cursor-pointer">
-          {row.getValue(STATIC_TEXTS.KEY_JOB_NAME)}
+          {row.original.jobName}
         </div>
       ),
     },
     {
-      accessorKey: STATIC_TEXTS.KEY_JOB_ID,
+      accessorKey: "jobId",
       header: STATIC_TEXTS.TABLE_JOB_ID,
       cell: ({ row }) => (
         <div className="font-mono text-sm">
-          {row.getValue(STATIC_TEXTS.KEY_JOB_ID)}
+          {row.original.jobId}
         </div>
       ),
     },
     {
-      accessorKey: STATIC_TEXTS.KEY_DOMAIN,
+      accessorKey: "domain",
       header: STATIC_TEXTS.TABLE_DOMAIN_AREA,
       cell: ({ row }) => (
-        <span>{row.getValue(STATIC_TEXTS.KEY_DOMAIN) || ""}</span>
+        <span>{row.original.domain || ""}</span>
       ),
     },
     {
-      accessorKey: STATIC_TEXTS.KEY_ABEND_TYPE,
-      header: STATIC_TEXTS.ABEND_TYPE,
-      cell: ({ row }) => (
-        <Badge variant="outline" className="font-mono">
-          {row.getValue(STATIC_TEXTS.KEY_ABEND_TYPE)}
-        </Badge>
-      ),
-    },
-    {
-      accessorKey: STATIC_TEXTS.KEY_STATUS,
+      accessorKey: "jobStatus",
       header: STATIC_TEXTS.TABLE_STATUS,
       cell: ({ row }) => (
-        <Badge variant="outline">{row.getValue(STATIC_TEXTS.KEY_STATUS)}</Badge>
+        <Badge variant="outline">{row.original.jobStatus}</Badge>
       ),
     },
     {
-      accessorKey: STATIC_TEXTS.KEY_PRIORITY,
+      accessorKey: "severity",
       header: STATIC_TEXTS.TABLE_PRIORITY,
-      cell: ({ row }) => <span>{row.getValue(STATIC_TEXTS.KEY_PRIORITY)}</span>,
+      cell: ({ row }) => <span>{row.original.severity}</span>,
     },
     {
-      accessorKey: STATIC_TEXTS.KEY_TIMESTAMP,
+      accessorKey: "confidence",
+      header: STATIC_TEXTS.TABLE_AI_CONFIDENCE,
+      cell: ({ row }) => (
+        <span>{row.original.confidence}</span>
+      ),
+    },
+    {
+      accessorKey: "timestamp",
       header: STATIC_TEXTS.TABLE_TIMESTAMP,
       cell: ({ row }) => (
         <div className="text-muted-foreground">
-          {row.getValue(STATIC_TEXTS.KEY_TIMESTAMP)
-            ? new Date(
-                row.getValue(STATIC_TEXTS.KEY_TIMESTAMP)
-              ).toLocaleString()
+          {row.original.timestamp
+            ? new Date(row.original.timestamp).toLocaleString()
             : "-"}
         </div>
       ),
     },
     {
-      accessorKey: STATIC_TEXTS.KEY_CONFIDENCE,
-      header: STATIC_TEXTS.TABLE_AI_CONFIDENCE,
-      cell: ({ row }) => (
-        <span>{row.getValue(STATIC_TEXTS.KEY_CONFIDENCE)}</span>
-      ),
-    },
-    {
-      accessorKey: STATIC_TEXTS.KEY_ASSIGNED_TO,
+      accessorKey: "assignedTo",
       header: STATIC_TEXTS.TABLE_ASSIGNED_TO,
       cell: ({ row }) => (
         <span>
-          {row.getValue(STATIC_TEXTS.KEY_ASSIGNED_TO) ||
-            row.getValue("serviceNowGroup") ||
-            "-"}
+          {row.original.assignedTo || "-"}
         </span>
       ),
     },
@@ -257,7 +245,6 @@ export function AbendTable({
         ) {
           return null;
         }
-        
         return (
           <Button
             onClick={(e) => {
