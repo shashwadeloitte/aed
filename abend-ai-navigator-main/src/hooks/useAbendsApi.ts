@@ -50,7 +50,7 @@ export function useAbendsApi(): UseAbendsApiResult {
     setLoading(true);
     setError(null);
 
-    const apiUrl = `${API_BASE_URL}/ui_api/v1alpha1/abends?limit=5`;
+    const apiUrl = ` /ui_api/v1alpha1/abends?limit=5`;
 
     fetch(apiUrl)
       .then((res) => {
