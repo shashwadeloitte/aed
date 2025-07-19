@@ -10,7 +10,7 @@ import {
 import styles from "@/components/AIInsightsPanel.module.css";
 import { STATIC_TEXTS } from "@/constants/staticTexts";
 
-// Types and Interfaces
+
 export interface Abend {
   id: string;
   jobName: string;

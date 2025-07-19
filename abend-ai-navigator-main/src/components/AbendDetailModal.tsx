@@ -45,12 +45,21 @@ interface AbendDetailModalProps {
   defaultTab?: string;
 }
 
+import { useAbendDetailApi } from "../hooks/useAbendDetailApi";
+
 export default function AbendDetailModal({
   abend,
   open,
   onClose,
   defaultTab = STATIC_TEXTS.TAB_ABENDS,
 }: AbendDetailModalProps) {
+  const { data: abendDetail, loading: detailLoading, error: detailError, fetchAbendDetail } = useAbendDetailApi();
+  // Fetch abend details from API when modal opens and abend.id is present
+  useEffect(() => {
+    if (open && abend?.id) {
+      fetchAbendDetail(abend.id);
+    }
+  }, [open, abend?.id, fetchAbendDetail]);
   const [comments, setComments] = useState("");
   const [activeTab, setActiveTab] = useState(defaultTab);
   const [approvePending, setApprovePending] = useState(false);
@@ -99,31 +108,14 @@ export default function AbendDetailModal({
     return { level: "Low", color: "text-red-600", bgColor: "bg-red-50" };
   };
 
-  const confidence = getConfidenceLevel(abend.confidence);
+  // Use confidence from API if available, else fallback
+  let confidenceValue = 0;
+  if (abendDetail && abendDetail.ai_confidence) {
+    confidenceValue = Number(abendDetail.ai_confidence);
+  }
+  const confidence = getConfidenceLevel(confidenceValue);
 
-  // Generate mock detailed data based on the actual abend
-  const detailedAbend = {
-    ...abend,
-    trackingId: abend.id,
-    incidentNumber: `INC-${abend.id.split("-")[2]}`,
-    jobId: `JOB-${abend.id.split("-")[2]}`,
-    orderId: `ORD-${abend.id.split("-")[2]}`,
-    severity: abend.priority.toUpperCase(),
-    currentState:
-      abend.status === STATIC_TEXTS.STATUS_RESOLVED
-        ? STATIC_TEXTS.STATUS_RESOLVED_CAPS
-        : abend.status === STATIC_TEXTS.STATUS_PENDING_MANUAL_APPROVAL
-        ? STATIC_TEXTS.STATUS_AI_ANALYSIS
-        : STATIC_TEXTS.STATUS_DETECTED,
-    durationInState:
-      parseInt(abend.duration.split("h")[0]) * 60 +
-      (abend.duration.includes("m")
-        ? parseInt(abend.duration.split("m")[0].split(" ").pop() || "0")
-        : 0),
-    rootCause: getRootCause(abend.abendType),
-    recommendedAction: getRecommendedAction(abend.abendType),
-    createdAt: abend.timestamp,
-  };
+  // Abend detail from API
 
   function getRootCause(abendType: string): string {
     const causes = {
@@ -153,6 +145,15 @@ export default function AbendDetailModal({
     );
   }
 
+  // Determine current state for workflow steps
+  let currentState = STATIC_TEXTS.WORKFLOW_STATE_DETECTED;
+  if (abendDetail) {
+    if (abendDetail.abendActionStatus === STATIC_TEXTS.STATUS_RESOLVED) {
+      currentState = STATIC_TEXTS.WORKFLOW_STATE_RESOLVED;
+    } else if (abendDetail.abendActionStatus === STATIC_TEXTS.STATUS_PENDING_MANUAL_APPROVAL) {
+      currentState = STATIC_TEXTS.WORKFLOW_STATE_AI_ANALYSIS;
+    }
+  }
   const workflowSteps = [
     {
       name: STATIC_TEXTS.WORKFLOW_DETECTED,
@@ -164,22 +165,19 @@ export default function AbendDetailModal({
       name: STATIC_TEXTS.WORKFLOW_AI_ANALYSIS,
       state: STATIC_TEXTS.WORKFLOW_STATE_AI_ANALYSIS,
       icon: Brain,
-      completed:
-        detailedAbend.currentState !== STATIC_TEXTS.WORKFLOW_STATE_DETECTED,
+      completed: currentState !== STATIC_TEXTS.WORKFLOW_STATE_DETECTED,
     },
     {
       name: STATIC_TEXTS.WORKFLOW_REMEDIATION,
       state: STATIC_TEXTS.WORKFLOW_STATE_REMEDIATION,
       icon: Wrench,
-      completed:
-        detailedAbend.currentState === STATIC_TEXTS.WORKFLOW_STATE_RESOLVED,
+      completed: currentState === STATIC_TEXTS.WORKFLOW_STATE_RESOLVED,
     },
     {
       name: STATIC_TEXTS.WORKFLOW_RESOLVED,
       state: STATIC_TEXTS.WORKFLOW_STATE_RESOLVED,
       icon: CheckCircle,
-      completed:
-        detailedAbend.currentState === STATIC_TEXTS.WORKFLOW_STATE_RESOLVED,
+      completed: currentState === STATIC_TEXTS.WORKFLOW_STATE_RESOLVED,
     },
   ];
 
@@ -203,12 +201,10 @@ export default function AbendDetailModal({
               {STATIC_TEXTS.ABEND_DETAILS}
             </DialogTitle>
             <p className="text-sm text-gray-600 mb-4">
-              {STATIC_TEXTS.TRACKING_ID} {detailedAbend.trackingId}
+              {STATIC_TEXTS.TRACKING_ID} {abendDetail.abendId}
             </p>
             <div className="text-sm text-gray-500 mb-4">
-              {abend.jobName} • {STATIC_TEXTS.ORDER_ID}{" "}
-              {`06${abend.id.slice(-3)}`} •{" "}
-              {new Date(abend.timestamp).toLocaleString()}
+              {abendDetail.jobName} • {STATIC_TEXTS.ORDER_ID} {abendDetail.orderId} • {new Date(abendDetail.abendedAt).toLocaleString()}
             </div>
           </div>
         </DialogHeader>
@@ -251,76 +247,48 @@ export default function AbendDetailModal({
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  <div>
-                    <label className="text-sm font-medium text-gray-500">
-                      Abend ID
-                    </label>
-                    <p className="text-sm font-medium">
-                      {getFormattedAbendId(abend.id)}
-                    </p>
-                  </div>
-                  <div>
-                    <label className="text-sm font-medium text-gray-500">
-                      Job Name
-                    </label>
-                    <p className="text-sm font-medium">{abend.jobName}</p>
-                  </div>
-                  <div>
-                    <label className="text-sm font-medium text-gray-500">
-                      Job ID
-                    </label>
-                    <p className="text-sm font-medium">{abend.jobId}</p>
-                  </div>
-                  <div>
-                    <label className="text-sm font-medium text-gray-500">
-                      Abend Type
-                    </label>
-                    <p className="text-sm font-medium">{abend.abendType}</p>
-                  </div>
-                  <div>
-                    <label className="text-sm font-medium text-gray-500">
-                      {STATIC_TEXTS.ADR_STATUS}
-                    </label>
-                    <Badge
-                      className={cn(
-                        "ml-2",
-                        ABEND_STATUS_CONFIG[abend.status]?.variant === "destructive"
-                          ? "bg-red-100 text-red-800"
-                          : ABEND_STATUS_CONFIG[abend.status]?.variant === "outline"
-                          ? "bg-yellow-100 text-yellow-800"
-                          : ABEND_STATUS_CONFIG[abend.status]?.variant === "secondary"
-                          ? "bg-blue-100 text-blue-800"
-                          : "bg-green-100 text-green-800"
-                      )}
-                    >
-                      {ABEND_STATUS_CONFIG[abend.status]?.label || abend.status}
-                    </Badge>
-                  </div>
-                  <div>
-                    <label className="text-sm font-medium text-gray-500">
-                      {STATIC_TEXTS.TABLE_STATUS}
-                    </label>
-                    <p className="text-sm font-medium">
-                      {ABEND_STATUS_CONFIG[abend.status]?.label || abend.status}
-                    </p>
-                  </div>
-                  <div>
-                    <label className="text-sm font-medium text-gray-500">
-                      Priority
-                    </label>
-                    <Badge
-                      className={cn(
-                        "ml-2",
-                        abend.priority === "high"
-                          ? "bg-red-100 text-red-800"
-                          : abend.priority === "medium"
-                          ? "bg-yellow-100 text-yellow-800"
-                          : "bg-gray-100 text-gray-800"
-                      )}
-                    >
-                      {PRIORITY_CONFIG[abend.priority].label}
-                    </Badge>
-                  </div>
+                  {detailLoading ? (
+                    <p>Loading...</p>
+                  ) : detailError ? (
+                    <p className="text-red-600">{detailError}</p>
+                  ) : abendDetail ? (
+                    <>
+                      <div>
+                        <label className="text-sm font-medium text-gray-500">Abend ID</label>
+                        <p className="text-sm font-medium">{abendDetail.abendId}</p>
+                      </div>
+                      <div>
+                        <label className="text-sm font-medium text-gray-500">Job Name</label>
+                        <p className="text-sm font-medium">{abendDetail.jobName}</p>
+                      </div>
+                      <div>
+                        <label className="text-sm font-medium text-gray-500">Job ID</label>
+                        <p className="text-sm font-medium">{abendDetail.jobId}</p>
+                      </div>
+                      <div>
+                        <label className="text-sm font-medium text-gray-500">Abend Type</label>
+                        <p className="text-sm font-medium">{abendDetail.processStatus}</p>
+                      </div>
+                      <div>
+                        <label className="text-sm font-medium text-gray-500">{STATIC_TEXTS.ADR_STATUS}</label>
+                        <Badge className="ml-2 bg-blue-100 text-blue-800">
+                          {abendDetail.abendActionStatus}
+                        </Badge>
+                      </div>
+                      <div>
+                        <label className="text-sm font-medium text-gray-500">{STATIC_TEXTS.TABLE_STATUS}</label>
+                        <p className="text-sm font-medium">{abendDetail.jobStatus}</p>
+                      </div>
+                      <div>
+                        <label className="text-sm font-medium text-gray-500">Priority</label>
+                        <Badge className="ml-2 bg-gray-100 text-gray-800">
+                          {abendDetail.severity}
+                        </Badge>
+                      </div>
+                    </>
+                  ) : (
+                    <p>No details available.</p>
+                  )}
                 </CardContent>
               </Card>
 
@@ -366,7 +334,7 @@ export default function AbendDetailModal({
                             >
                               {step.name}
                             </p>
-                            {step.state === detailedAbend.currentState && (
+                            {step.state === currentState && (
                               <p className="text-xs text-blue-600">
                                 Current Step
                               </p>
@@ -413,10 +381,10 @@ export default function AbendDetailModal({
                       <Badge
                         className={cn(confidence.bgColor, confidence.color)}
                       >
-                        {confidence.level} ({abend.confidence}%)
+                        {confidence.level} ({confidenceValue}%)
                       </Badge>
                     </div>
-                    <Progress value={abend.confidence} className="h-2" />
+                    <Progress value={confidenceValue} className="h-2" />
                     <p className="text-sm text-gray-600">
                       The AI system has analyzed the abend patterns and
                       historical data to provide diagnosis and remediation
@@ -539,9 +507,9 @@ export default function AbendDetailModal({
                         </p>
                         <div className="flex items-center space-x-4">
                           <div className="text-xs text-blue-600">
-                            Success Rate:{" "}
+                            Success Rate: {" "}
                             <span className="font-medium">
-                              {abend.confidence}%
+                              {confidenceValue}%
                             </span>
                           </div>
                           <div className="text-xs text-blue-600">
@@ -763,7 +731,7 @@ export default function AbendDetailModal({
                         Abend notification received and processed
                       </p>
                       <p className="text-xs text-gray-500 mt-1">
-                        Tracking ID: {detailedAbend.trackingId}
+                        Tracking ID: {abendDetail ? abendDetail.abendId : abend?.id}
                       </p>
                     </div>
                   </div>
@@ -845,8 +813,8 @@ export default function AbendDetailModal({
                         AI analysis started
                       </p>
                       <p className="text-xs text-gray-500 mt-1">
-                        Confidence: {abend.confidence}% • Abend Type:{" "}
-                        {abend.abendType}
+                        Confidence: {confidenceValue}% • Abend Type:{" "}
+                        {abendDetail ? abendDetail.processStatus : abend?.abendType}
                       </p>
                     </div>
                   </div>
@@ -868,14 +836,14 @@ export default function AbendDetailModal({
                         AI remediation suggestions generated
                       </p>
                       <p className="text-xs text-gray-500 mt-1">
-                        Status: {ABEND_STATUS_CONFIG[abend.status]?.label || abend.status} •
-                        Assigned To: {abend.assignedTo}
+                        Status:{" "}
+                    {abendDetail ? abendDetail.abendActionStatus : ""} {" "}
+                    • Assigned To: {abendDetail ? abendDetail.assigned_to : abend?.assignedTo}
                       </p>
                     </div>
                   </div>
 
-                  {abend.status ===
-                    STATIC_TEXTS.STATUS_PENDING_MANUAL_APPROVAL && (
+                  {abendDetail && abendDetail.abendActionStatus === STATIC_TEXTS.STATUS_PENDING_MANUAL_APPROVAL && (
                     <div className="flex items-start space-x-3 p-3 bg-yellow-50 rounded-lg">
                       <div className="w-2 h-2 bg-yellow-600 rounded-full mt-2"></div>
                       <div className="flex-1">
@@ -896,7 +864,7 @@ export default function AbendDetailModal({
                     </div>
                   )}
 
-                  {abend.status === STATIC_TEXTS.STATUS_RESOLVED && (
+                  {abendDetail && abendDetail.abendActionStatus === STATIC_TEXTS.STATUS_RESOLVED && (
                     <div className="flex items-start space-x-3 p-3 bg-green-50 rounded-lg">
                       <div className="w-2 h-2 bg-green-600 rounded-full mt-2"></div>
                       <div className="flex-1">
@@ -912,7 +880,7 @@ export default function AbendDetailModal({
                           Abend successfully resolved
                         </p>
                         <p className="text-xs text-gray-500 mt-1">
-                          Duration: {abend.duration} • Verification: completed
+                        Duration: {abendDetail ? abendDetail.abendedAt : "-"} • Verification: completed
                         </p>
                       </div>
                     </div>
